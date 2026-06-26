@@ -90,6 +90,7 @@ const defaultDashboardTemplates = [
   { id: "bloom_bliss", name: "Bloom Bliss Theme", type: "Premium", bg: "from-indigo-50 to-violet-100", icon: "🔮" },
   { id: "t9", name: "Nikah Monochrome", type: "Premium", bg: "from-zinc-800 to-zinc-950", icon: "🖤", popular: true },
   { id: "t10", name: "Nikah Sakinah", type: "Premium", bg: "from-amber-100 via-stone-50 to-amber-50", icon: "🦢", popular: true },
+  { id: "t12", name: "Monochrome Scroll", type: "Premium", bg: "from-zinc-900 to-black border-2 border-zinc-950", icon: "🖤", popular: true },
 ];
 
 function Dashboard() {

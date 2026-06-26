@@ -48,6 +48,7 @@ export const templates: Template[] = [
   { id: "t9", name: "Nikah Monochrome", thumbnail: "🖤", type: "premium", popular: true },
   { id: "t10", name: "Nikah Sakinah", thumbnail: "🦢", type: "premium", popular: true },
   { id: "t11", name: "Coba Buatkan", thumbnail: "💻", type: "premium", popular: true },
+  { id: "t12", name: "Monochrome Scroll", thumbnail: "🖤", type: "premium", popular: true },
 ];
 
 export const packages: Package[] = [

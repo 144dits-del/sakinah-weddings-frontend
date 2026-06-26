@@ -43,11 +43,11 @@ function Preview() {
   const [isOpen, setIsOpen] = useState(false);
   const [previewModePhone, setPreviewModePhone] = useState(true);
 
-  const isMonochrome = selectedTemplate === "monochrome" || selectedTemplate === "basic" || selectedTemplate === "t6" || selectedTemplate === "t9";
+  const isMonochrome = selectedTemplate === "monochrome" || selectedTemplate === "basic" || selectedTemplate === "t6" || selectedTemplate === "t9" || selectedTemplate === "t12";
 
   const getTheme = (id: string) => {
     const norm = id.toLowerCase();
-    const isMono = norm === "monochrome" || norm === "basic" || norm === "t6" || norm === "t9";
+    const isMono = norm === "monochrome" || norm === "basic" || norm === "t6" || norm === "t9" || norm === "t12";
     const isRose = norm === "rose_red" || norm === "t2" || norm === "blossom" || norm === "bliss";
     const isMawaddah = norm === "t3" || norm === "chic";
     const isLuxury = norm === "dark_gold" || norm === "dark_gold_2" || norm === "t4";

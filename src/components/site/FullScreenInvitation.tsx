@@ -114,11 +114,11 @@ export default function FullScreenInvitation({
     setIsMuted((prev) => !prev);
   };
 
-  const isMonochrome = selectedTemplate === "monochrome" || selectedTemplate === "basic" || selectedTemplate === "t6" || selectedTemplate === "t9";
+  const isMonochrome = selectedTemplate === "monochrome" || selectedTemplate === "basic" || selectedTemplate === "t6" || selectedTemplate === "t9" || selectedTemplate === "t12";
 
   const getTheme = (id: string) => {
     const norm = id.toLowerCase();
-    const isMono = norm === "monochrome" || norm === "basic" || norm === "t6" || norm === "t9";
+    const isMono = norm === "monochrome" || norm === "basic" || norm === "t6" || norm === "t9" || norm === "t12";
     const isRose = norm === "rose_red" || norm === "t2" || norm === "blossom" || norm === "bliss";
     const isMawaddah = norm === "t3" || norm === "chic";
     const isLuxury = norm === "dark_gold" || norm === "dark_gold_2" || norm === "t4";
@@ -504,7 +504,7 @@ export default function FullScreenInvitation({
       {/* Container utama: Terpusat di PC (max-w-md), alami 100% di HP */}
       <div className={`w-full max-w-md ${isMonochrome ? "bg-white border-2 border-zinc-950 text-zinc-900" : "bg-background border border-border/40 md:rounded-[2rem]"} min-h-screen md:min-h-[800px] md:h-[840px] overflow-hidden shadow-2xl relative flex flex-col justify-between`}>
         
-        {selectedTemplate === "t9" && (
+        {selectedTemplate === "t12" && (
           <style dangerouslySetInnerHTML={{ __html: `
             @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
             .font-serif {
@@ -562,7 +562,7 @@ export default function FullScreenInvitation({
         )}
 
         {/* Sound Toggle (Fixed at top-right inside mockup) */}
-        {selectedTemplate === "t9" && (
+        {selectedTemplate === "t12" && (
           <button 
             type="button"
             onClick={toggleSound} 
@@ -574,7 +574,7 @@ export default function FullScreenInvitation({
 
         {/* 1. COVER PAGE (BEFORE OPENING) */}
         {!isOpen ? (
-          selectedTemplate === "t9" ? (
+          selectedTemplate === "t12" ? (
             <section className="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center text-center p-6 select-none overflow-hidden animate-fade-in font-sans">
               <div className="cover-frame">
                 <CornerOrnament position="top-left" />
@@ -753,7 +753,7 @@ export default function FullScreenInvitation({
           <div className={`flex-1 flex flex-col justify-between h-full ${isMonochrome ? "bg-white text-zinc-900" : "bg-background"} overflow-hidden relative`}>
             
             {/* Tampilan Content Area dengan Animasi transisi tabSlideIn */}
-            {selectedTemplate === "t9" ? (
+            {selectedTemplate === "t12" ? (
               <div className={`flex-1 overflow-y-auto scrollbar-none w-full space-y-0 text-zinc-900 bg-white font-sans ${activePkg === "Sakinah" ? "pb-5" : ""}`}>
                 {/* 1. PEMBUKA */}
                 <section className="frame-section" id="pembuka">
@@ -1609,7 +1609,7 @@ export default function FullScreenInvitation({
             )}
 
             {/* FIXED BOTTOM NAVIGATION BAR (MAKSIMAL 4 NAVIGASI KUNCI) */}
-            {selectedTemplate !== "t9" && (
+            {selectedTemplate !== "t12" && (
               <nav className={`absolute inset-x-0 z-30 h-14 border-t flex items-center justify-around text-[10px] font-bold shadow-[0_-2px_10px_rgba(0,0,0,0.05)] select-none ${isMonochrome ? "bg-white border-zinc-950 text-zinc-900" : "bg-background border-border text-muted-foreground"} ${activePkg === "Sakinah" ? "bottom-5" : "bottom-0"}`}>
                 {[
                   { tab: "Home", icon: HomeIcon },
