@@ -26,6 +26,45 @@ import {
   Volume2,
 } from "lucide-react";
 
+const CornerOrnament = ({ position }: { position: "top-left" | "top-right" | "bottom-left" | "bottom-right" }) => {
+  const rotationClass = {
+    "top-left": "top-2 left-2 rotate-0",
+    "top-right": "top-2 right-2 rotate-90",
+    "bottom-left": "bottom-2 left-2 -rotate-90",
+    "bottom-right": "bottom-2 right-2 rotate-180",
+  }[position];
+
+  return (
+    <svg 
+      viewBox="0 0 100 100" 
+      className={`absolute w-10 h-10 text-zinc-950 pointer-events-none fill-none stroke-current z-10 ${rotationClass}`}
+      strokeWidth="1.5"
+    >
+      <path d="M 5 95 L 5 5 L 95 5" />
+      <path d="M 10 90 L 10 10 L 90 10" strokeWidth="0.75" strokeDasharray="1,2" />
+      <path d="M 5 35 C 10 35, 18 28, 18 18 C 18 8, 8 18, 8 18" strokeWidth="1" />
+      <path d="M 35 5 C 35 10, 28 18, 18 18" strokeWidth="1" />
+      <circle cx="18" cy="18" r="2.5" fill="currentColor" />
+    </svg>
+  );
+};
+
+const formatIndonesianDate = (dateStr: string) => {
+  if (!dateStr) return "";
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr;
+    const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const months = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+    return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+  } catch (e) {
+    return dateStr;
+  }
+};
+
 interface FullScreenInvitationProps {
   subdomain: string;
   guestName?: string;
@@ -41,6 +80,39 @@ export default function FullScreenInvitation({
   const [activePkg, setActivePkg] = useState("Sakinah");
   const [selectedTemplate, setSelectedTemplate] = useState("sakinah");
   const [isOpen, setIsOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+
+  const [audio] = useState(() => {
+    if (typeof window !== "undefined") {
+      const a = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3");
+      a.loop = true;
+      return a;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (audio) {
+      if (isOpen && !isMuted) {
+        audio.play().catch(() => {});
+      } else {
+        audio.pause();
+      }
+    }
+  }, [isOpen, isMuted, audio]);
+
+  useEffect(() => {
+    return () => {
+      if (audio) {
+        audio.pause();
+      }
+    };
+  }, [audio]);
+
+  const toggleSound = () => {
+    setIsMuted((prev) => !prev);
+  };
 
   const isMonochrome = selectedTemplate === "monochrome" || selectedTemplate === "basic" || selectedTemplate === "t6" || selectedTemplate === "t9";
 
@@ -432,137 +504,713 @@ export default function FullScreenInvitation({
       {/* Container utama: Terpusat di PC (max-w-md), alami 100% di HP */}
       <div className={`w-full max-w-md ${isMonochrome ? "bg-white border-2 border-zinc-950 text-zinc-900" : "bg-background border border-border/40 md:rounded-[2rem]"} min-h-screen md:min-h-[800px] md:h-[840px] overflow-hidden shadow-2xl relative flex flex-col justify-between`}>
         
+        {selectedTemplate === "t9" && (
+          <style dangerouslySetInnerHTML={{ __html: `
+            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+            .font-serif {
+              font-family: 'Playfair Display', Georgia, serif !important;
+            }
+            .font-sans {
+              font-family: 'Plus Jakarta Sans', Inter, sans-serif !important;
+            }
+            .frame-section {
+              position: relative;
+              padding: 24px 14px;
+              background: #ffffff;
+              color: #09090b;
+            }
+            .frame-wrapper {
+              position: relative;
+              border: 1px solid #09090b;
+              padding: 20px 12px;
+              min-height: auto;
+              width: 100%;
+            }
+            .cover-frame {
+              position: relative;
+              border: 1px solid #09090b;
+              padding: 24px 14px;
+              height: 100%;
+              width: 100%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+            }
+            .story-timeline {
+              position: relative;
+              border-left: 1.5px solid #09090b;
+              padding-left: 16px;
+              margin-left: 8px;
+            }
+            .story-item {
+              position: relative;
+              margin-bottom: 24px;
+            }
+            .story-item:last-child {
+              margin-bottom: 0;
+            }
+            .countdown-box {
+              background: #09090b !important;
+              color: #ffffff !important;
+              padding: 6px;
+              min-width: 48px;
+              text-align: center;
+              border-radius: 0px !important;
+            }
+          `}} />
+        )}
+
+        {/* Sound Toggle (Fixed at top-right inside mockup) */}
+        {selectedTemplate === "t9" && (
+          <button 
+            type="button"
+            onClick={toggleSound} 
+            className="absolute top-4 right-4 z-[60] w-10 h-10 bg-white/95 border border-zinc-950 rounded-full flex items-center justify-center shadow-md hover:bg-zinc-100 transition cursor-pointer text-lg font-bold"
+          >
+            {isMuted ? "🔇" : "🔊"}
+          </button>
+        )}
+
         {/* 1. COVER PAGE (BEFORE OPENING) */}
         {!isOpen ? (
-          <section className={`absolute inset-0 z-50 ${theme.coverBg} flex flex-col items-center justify-center text-center p-6 select-none overflow-hidden animate-fade-in`}>
-            
-            {/* Corner border ornaments for Monochrome */}
-            {isMonochrome && (
-              <>
-                <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-zinc-950" />
-                <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-zinc-950" />
-                <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-zinc-950" />
-                <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-zinc-950" />
-              </>
-            )}
-
-            {/* Floral branch ornaments for t10 (Sakinah Theme) */}
-            {selectedTemplate === "t10" && (
-              <>
-                <div className="absolute top-0 left-0 w-24 h-24 pointer-events-none select-none opacity-90 animate-fade-in">
-                  <svg viewBox="0 0 100 100" className="fill-[#8c7853]/25 w-full h-full">
-                    <path d="M 0 0 C 40 10, 80 50, 100 100 C 60 80, 20 40, 0 0 Z" />
-                    <circle cx="20" cy="30" r="3" fill="#8c7853" opacity="0.4" />
-                    <circle cx="45" cy="55" r="4" fill="#8c7853" opacity="0.3" />
-                  </svg>
-                </div>
-                <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none select-none opacity-90 animate-fade-in">
-                  <svg viewBox="0 0 100 100" className="fill-[#8c7853]/25 w-full h-full -scale-x-100">
-                    <path d="M 0 0 C 40 10, 80 50, 100 100 C 60 80, 20 40, 0 0 Z" />
-                    <circle cx="20" cy="30" r="3" fill="#8c7853" opacity="0.4" />
-                    <circle cx="45" cy="55" r="4" fill="#8c7853" opacity="0.3" />
-                  </svg>
-                </div>
-                <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none select-none opacity-80 flex items-end justify-center">
-                  <div className="w-full h-8 bg-gradient-to-t from-[#8c7853]/10 to-transparent relative">
-                    <div className="absolute bottom-1 left-4 w-12 h-6 border-t border-[#8c7853]/30 rounded-t-full" />
-                    <div className="absolute bottom-1 right-4 w-12 h-6 border-t border-[#8c7853]/30 rounded-t-full" />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* Hiasan Bunga Mini / Bintang */}
-            <div className={`absolute top-12 ${isMonochrome ? "text-zinc-950 font-serif text-xl" : "text-[#8c7853] text-2xl animate-pulse"}`}>
-              {selectedTemplate === "t10" ? "🕊️" : isMonochrome ? "✦ ✦ ✦" : "🌸"}
-            </div>
-            
-            <div className={`text-[10px] tracking-[0.4em] uppercase ${theme.textGold} mb-4`}>THE WEDDING OF</div>
-
-            {selectedTemplate === "t10" && (
-              <div className="mb-4 animate-bounce duration-1000">
-                <span className="text-4xl">🕊️</span>
-              </div>
-            )}
-            
-            <div className="space-y-2">
-              <h1 className={`${theme.fontHead} text-5xl font-black capitalize tracking-tight`}>
-                {wedding.groom.nickname}
-              </h1>
-              <div className={`${theme.fontHead} text-3xl ${theme.textGold} italic my-2 font-semibold`}>&</div>
-              <h1 className={`${theme.fontHead} text-5xl font-black capitalize tracking-tight`}>
-                {wedding.bride.nickname}
-              </h1>
-            </div>
-
-            <div className="mt-8 text-xs text-muted-foreground tracking-wide font-semibold">
-              Akan segera melangsungkan pernikahan pada:
-            </div>
-            <div className={`mt-2 text-base font-bold ${theme.fontHead}`}>
-              Sabtu, 30 Mei 2026
-            </div>
-
-            {/* Live Ticking Countdown */}
-            <div className={`mt-6 p-4 max-w-xs w-full mx-auto ${isMonochrome ? "bg-zinc-50 border border-zinc-950 rounded-none" : "rounded-2xl bg-gold-soft/30 border border-gold/15"}`}>
-              <div className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">
-                {countdown.isPast ? "Simulasi Hitung Mundur (Acara Berlalu)" : "Hitung Mundur Acara"}
-              </div>
-              <div className="grid grid-cols-4 gap-1.5 mt-2">
-                {[
-                  { v: countdown.days, l: "Hari" },
-                  { v: countdown.hours, l: "Jam" },
-                  { v: countdown.minutes, l: "Menit" },
-                  { v: countdown.seconds, l: "Detik" },
-                ].map((item, idx) => (
-                  <div key={idx} className={`rounded-lg p-1.5 text-center ${isMonochrome ? "bg-white border border-zinc-950 rounded-none" : "bg-background/80"}`}>
-                    <div className={`${theme.fontHead} text-base font-black ${theme.textGold} leading-none`}>
-                      {item.v.toString().padStart(2, "0")}
+          selectedTemplate === "t9" ? (
+            <section className="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center text-center p-6 select-none overflow-hidden animate-fade-in font-sans">
+              <div className="cover-frame">
+                <CornerOrnament position="top-left" />
+                <CornerOrnament position="top-right" />
+                <CornerOrnament position="bottom-left" />
+                <CornerOrnament position="bottom-right" />
+                
+                <img 
+                  src="https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/slide-1-2372-l-202102060607.jpg" 
+                  alt="foto pasangan" 
+                  className="w-32 h-32 object-cover rounded-full border-2 border-zinc-950 mb-4 shadow-sm"
+                />
+                
+                <p className="font-serif tracking-[0.2em] text-[10px] uppercase text-zinc-500 mb-1">Pernikahan</p>
+                <h1 className="font-serif text-3xl font-bold my-2 text-zinc-900 leading-tight">
+                  {wedding.groom.nickname} & {wedding.bride.nickname}
+                </h1>
+                
+                {/* Countdown */}
+                <div className="flex justify-center gap-1.5 my-3">
+                  {[
+                    { v: countdown.days, l: "Hari" },
+                    { v: countdown.hours, l: "Jam" },
+                    { v: countdown.minutes, l: "Menit" },
+                    { v: countdown.seconds, l: "Detik" },
+                  ].map((item, idx) => (
+                    <div key={idx} className="countdown-box">
+                      <span className="text-sm font-bold block leading-none">{item.v.toString().padStart(2, "0")}</span>
+                      <p className="text-[7px] uppercase tracking-wider font-semibold mt-1 leading-none">{item.l}</p>
                     </div>
-                    <div className="text-[7px] text-muted-foreground uppercase font-bold mt-1">
-                      {item.l}
+                  ))}
+                </div>
+                
+                <div className="text-center mt-3 text-xs text-zinc-700">
+                  Kepada Yth. Bapak/Ibu/Saudara/i:<br />
+                  <p className="font-bold text-sm text-zinc-950 mt-1 capitalize leading-relaxed">
+                    {guestName || "Tamu Undangan"}
+                  </p>
+                  {guestAddress && <p className="text-[10px] text-zinc-500 capitalize">di {guestAddress}</p>}
+                  
+                  <button 
+                    type="button"
+                    className="mt-4 bg-zinc-950 hover:bg-zinc-900 text-white font-bold tracking-wider text-[10px] py-2.5 px-6 uppercase transition cursor-pointer border border-zinc-950"
+                    onClick={handleBukaUndangan}
+                  >
+                    Buka Undangan
+                  </button>
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className={`absolute inset-0 z-50 ${theme.coverBg} flex flex-col items-center justify-center text-center p-6 select-none overflow-hidden animate-fade-in`}>
+              
+              {/* Corner border ornaments for Monochrome */}
+              {isMonochrome && (
+                <>
+                  <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-zinc-950" />
+                  <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-zinc-950" />
+                  <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-zinc-950" />
+                  <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-zinc-950" />
+                </>
+              )}
+
+              {/* Floral branch ornaments for t10 (Sakinah Theme) */}
+              {selectedTemplate === "t10" && (
+                <>
+                  <div className="absolute top-0 left-0 w-24 h-24 pointer-events-none select-none opacity-90 animate-fade-in">
+                    <svg viewBox="0 0 100 100" className="fill-[#8c7853]/25 w-full h-full">
+                      <path d="M 0 0 C 40 10, 80 50, 100 100 C 60 80, 20 40, 0 0 Z" />
+                      <circle cx="20" cy="30" r="3" fill="#8c7853" opacity="0.4" />
+                      <circle cx="45" cy="55" r="4" fill="#8c7853" opacity="0.3" />
+                    </svg>
+                  </div>
+                  <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none select-none opacity-90 animate-fade-in">
+                    <svg viewBox="0 0 100 100" className="fill-[#8c7853]/25 w-full h-full -scale-x-100">
+                      <path d="M 0 0 C 40 10, 80 50, 100 100 C 60 80, 20 40, 0 0 Z" />
+                      <circle cx="20" cy="30" r="3" fill="#8c7853" opacity="0.4" />
+                      <circle cx="45" cy="55" r="4" fill="#8c7853" opacity="0.3" />
+                    </svg>
+                  </div>
+                  <div className="absolute bottom-0 inset-x-0 h-16 pointer-events-none select-none opacity-80 flex items-end justify-center">
+                    <div className="w-full h-8 bg-gradient-to-t from-[#8c7853]/10 to-transparent relative">
+                      <div className="absolute bottom-1 left-4 w-12 h-6 border-t border-[#8c7853]/30 rounded-t-full" />
+                      <div className="absolute bottom-1 right-4 w-12 h-6 border-t border-[#8c7853]/30 rounded-t-full" />
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                </>
+              )}
 
-            {/* Personalized Envelope block for Guests */}
-            {guestName && (
-              <div className={`mt-8 backdrop-blur p-4 max-w-xs w-full mx-auto text-xs shadow-sm ${isMonochrome ? "bg-white border border-zinc-950 rounded-none" : "bg-white/80 border border-gold/15 rounded-2xl"}`}>
-                <div className="text-[9px] text-muted-foreground uppercase tracking-wider mb-1 font-semibold">
-                  Kepada Yth. Bapak/Ibu/Saudara/i:
+              {/* Hiasan Bunga Mini / Bintang */}
+              <div className={`absolute top-12 ${isMonochrome ? "text-zinc-950 font-serif text-xl" : "text-[#8c7853] text-2xl animate-pulse"}`}>
+                {selectedTemplate === "t10" ? "🕊️" : isMonochrome ? "✦ ✦ ✦" : "🌸"}
+              </div>
+              
+              <div className={`text-[10px] tracking-[0.4em] uppercase ${theme.textGold} mb-4`}>THE WEDDING OF</div>
+
+              {selectedTemplate === "t10" && (
+                <div className="mb-4 animate-bounce duration-1000">
+                  <span className="text-4xl">🕊️</span>
                 </div>
-                <div className={`${theme.fontHead} font-bold text-sm ${theme.textGold} capitalize`}>
-                  {guestName}
+              )}
+              
+              <div className="space-y-2">
+                <h1 className={`${theme.fontHead} text-5xl font-black capitalize tracking-tight`}>
+                  {wedding.groom.nickname}
+                </h1>
+                <div className={`${theme.fontHead} text-3xl ${theme.textGold} italic my-2 font-semibold`}>&</div>
+                <h1 className={`${theme.fontHead} text-5xl font-black capitalize tracking-tight`}>
+                  {wedding.bride.nickname}
+                </h1>
+              </div>
+
+              <div className="mt-8 text-xs text-muted-foreground tracking-wide font-semibold">
+                Akan segera melangsungkan pernikahan pada:
+              </div>
+              <div className={`mt-2 text-base font-bold ${theme.fontHead}`}>
+                Sabtu, 30 Mei 2026
+              </div>
+
+              {/* Live Ticking Countdown */}
+              <div className={`mt-6 p-4 max-w-xs w-full mx-auto ${isMonochrome ? "bg-zinc-50 border border-zinc-950 rounded-none" : "rounded-2xl bg-gold-soft/30 border border-gold/15"}`}>
+                <div className="text-[9px] text-muted-foreground uppercase tracking-wider font-semibold">
+                  {countdown.isPast ? "Simulasi Hitung Mundur (Acara Berlalu)" : "Hitung Mundur Acara"}
                 </div>
-                {guestAddress && (
-                  <div className="text-[9px] text-muted-foreground mt-0.5 capitalize">
-                    di {guestAddress}
+                <div className="grid grid-cols-4 gap-1.5 mt-2">
+                  {[
+                    { v: countdown.days, l: "Hari" },
+                    { v: countdown.hours, l: "Jam" },
+                    { v: countdown.minutes, l: "Menit" },
+                    { v: countdown.seconds, l: "Detik" },
+                  ].map((item, idx) => (
+                    <div key={idx} className={`rounded-lg p-1.5 text-center ${isMonochrome ? "bg-white border border-zinc-950 rounded-none" : "bg-background/80"}`}>
+                      <div className={`${theme.fontHead} text-base font-black ${theme.textGold} leading-none`}>
+                        {item.v.toString().padStart(2, "0")}
+                      </div>
+                      <div className="text-[7px] text-muted-foreground uppercase font-bold mt-1">
+                        {item.l}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Personalized Envelope block for Guests */}
+              {guestName && (
+                <div className={`mt-8 backdrop-blur p-4 max-w-xs w-full mx-auto text-xs shadow-sm ${isMonochrome ? "bg-white border border-zinc-950 rounded-none" : "bg-white/80 border border-gold/15 rounded-2xl"}`}>
+                  <div className="text-[9px] text-muted-foreground uppercase tracking-wider mb-1 font-semibold">
+                    Kepada Yth. Bapak/Ibu/Saudara/i:
                   </div>
-                )}
-              </div>
-            )}
+                  <div className={`${theme.fontHead} font-bold text-sm ${theme.textGold} capitalize`}>
+                    {guestName}
+                  </div>
+                  {guestAddress && (
+                    <div className="text-[9px] text-muted-foreground mt-0.5 capitalize">
+                      di {guestAddress}
+                    </div>
+                  )}
+                </div>
+              )}
 
-            <Button
-              onClick={handleBukaUndangan}
-              className={`mt-8 ${theme.btn} px-8 py-5 h-auto flex items-center gap-2 group transform hover:scale-105 transition duration-300`}
-            >
-              <Heart className={`h-4 w-4 ${isMonochrome ? "fill-zinc-950 text-white" : "fill-primary-foreground"} group-hover:scale-125 transition`} />
-              Buka Undangan
-            </Button>
-            
-            <div className={`absolute bottom-12 ${isMonochrome ? "text-zinc-950 font-serif text-xl" : "text-gold text-3xl animate-pulse"}`}>
-              {isMonochrome ? "✦ ✦ ✦" : "🌸"}
-            </div>
-          </section>
+              <Button
+                onClick={handleBukaUndangan}
+                className={`mt-8 ${theme.btn} px-8 py-5 h-auto flex items-center gap-2 group transform hover:scale-105 transition duration-300`}
+              >
+                <Heart className={`h-4 w-4 ${isMonochrome ? "fill-zinc-950 text-white" : "fill-primary-foreground"} group-hover:scale-125 transition`} />
+                Buka Undangan
+              </Button>
+              
+              <div className={`absolute bottom-12 ${isMonochrome ? "text-zinc-950 font-serif text-xl" : "text-gold text-3xl animate-pulse"}`}>
+                {isMonochrome ? "✦ ✦ ✦" : "🌸"}
+              </div>
+            </section>
+          )
         ) : (
           /* 2. LIVE INVITATION (MAIN INTERACTIVE AREA) */
           <div className={`flex-1 flex flex-col justify-between h-full ${isMonochrome ? "bg-white text-zinc-900" : "bg-background"} overflow-hidden relative`}>
             
             {/* Tampilan Content Area dengan Animasi transisi tabSlideIn */}
-            <div key={tabKey} className={`flex-1 overflow-y-auto scrollbar-none w-full animate-tab-slide ${activePkg === "Sakinah" ? "pb-20" : "pb-16"}`}>
-              
-              {/* TAB 1: HOME */}
+            {selectedTemplate === "t9" ? (
+              <div className={`flex-1 overflow-y-auto scrollbar-none w-full space-y-0 text-zinc-900 bg-white font-sans ${activePkg === "Sakinah" ? "pb-5" : ""}`}>
+                {/* 1. PEMBUKA */}
+                <section className="frame-section" id="pembuka">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <p className="salam text-xs leading-relaxed mb-4">
+                      Assalamu'alaikum Warahmatullah<br />
+                      Dengan Rahmat Allah yang Maha Kuasa InsyaAllah kami akan melangsungkan pernikahan pada:
+                    </p>
+                    <div className="info-acara text-xs font-bold mb-5 space-y-1">
+                      <p><span className="emoji mr-1">📅</span>{formatIndonesianDate(wedding.akad.date) || "Senin, 31 Agustus 2026"}</p>
+                      <p><span className="emoji mr-1">📍</span>{wedding.akad.venue || "Aula Masjid ABRI Cimahi - Jalan Gatot Subroto Kota Cimahi"}</p>
+                    </div>
+
+                    <div className="w-full space-y-4">
+                      <div className="profile-card">
+                        <img 
+                          src="https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/wanita-1-210627044705-l.jpg" 
+                          alt={wedding.bride.fullName || "Siti Salamah Azzahra"} 
+                          className="profile-img" 
+                        />
+                        <div className="profile-info">
+                          <p className="couple-name">
+                            {wedding.bride.fullName || "Siti Salamah Azzahra"}<br />
+                            <span className="text-[10px] text-zinc-500 font-normal">Putri dari {wedding.bride.father || "Maman"} & {wedding.bride.mother || "Imas"}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="profile-card">
+                        <img 
+                          src="https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/pria-1-240421071848-l.jpg" 
+                          alt={wedding.groom.fullName || "Adi Sumaryadi"} 
+                          className="profile-img" 
+                        />
+                        <div className="profile-info">
+                          <p className="couple-name">
+                            {wedding.groom.fullName || "Adi Sumaryadi"}<br />
+                            <span className="text-[10px] text-zinc-500 font-normal">Putra dari {wedding.groom.father || "Sumarmo"} & {wedding.groom.mother || "Kantun"}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 2. LOVE STORY */}
+                <section className="frame-section" id="love-story">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <h2 className="section-title">Cerita Cinta</h2>
+                    <p className="text-[11px] text-zinc-500 leading-relaxed mb-5">
+                      Banyak cerita yang kami lalui sehingga akhirnya kami bisa bersatu, cerita yang akan kami kenang selalu, dan cerita itu kami bagi untuk anda.
+                    </p>
+                    <div className="story-timeline">
+                      {[
+                        {
+                          date: "Kamis, 16 Oktober 2014",
+                          title: "Pertama Kali Berjumpa",
+                          desc: `Pertama kali berjumpa di kampus. Pertemuan awal yang menumbuhkan benih kekaguman satu sama lain antara ${wedding.groom.nickname} dan ${wedding.bride.nickname}.`
+                        },
+                        {
+                          date: "Minggu, 14 Desember 2014",
+                          title: `${wedding.groom.nickname} Mengunjungi Rumah ${wedding.bride.nickname} Pertama Kali`,
+                          desc: "Langkah serius pertama untuk bersilaturahmi dengan keluarga besar dan menyatakan niat tulus menjalin hubungan yang lebih dekat."
+                        },
+                        {
+                          date: "Minggu, 15 Maret 2015",
+                          title: "Prosesi Lamaran",
+                          desc: "Hari yang bersejarah di mana kedua keluarga resmi dipertemukan untuk meminang dan merencanakan masa depan pernikahan kami."
+                        },
+                        {
+                          date: "Kamis, 11 Juni 2015",
+                          title: "Kami Dipingit Satu Sama Lain",
+                          desc: "Tradisi adat pingitan sebelum hari pernikahan. Menjaga kerinduan dan kesucian hubungan hingga hari ijab qobul tiba."
+                        }
+                      ].map((item, idx) => (
+                        <div key={idx} className="story-item">
+                          <div className="story-date">{item.date}</div>
+                          <h4 className="story-title">{item.title}</h4>
+                          <p className="story-description">{item.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                {/* 3. ACARA */}
+                <section className="frame-section" id="acara">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <h2 className="judul-section">Undangan dan Acara</h2>
+                    <p className="deskripsi-section">
+                      Bahagia rasanya apabila anda berkenan hadir dan memberikan doa restu kepada kami. Kami mengundang anda untuk hadir dalam acara resepsi pernikahan kami berikut ini
+                    </p>
+
+                    <div className="section-box">
+                      <h3 className="section-title">Akad Nikah</h3>
+                      <hr className="divider" />
+                      <div className="section-content">
+                        <p className="font-bold">{formatIndonesianDate(wedding.akad.date) || "Senin, 31 Agustus 2026"}</p>
+                        <p>{wedding.akad.start || "12:00"} - {wedding.akad.end || "selesai"}</p>
+                        <p>{wedding.akad.venue || "Aula Masjid ABRI Cimahi - Jalan Gatot Subroto Kota Cimahi"}</p>
+                      </div>
+                      <div className="mt-3">
+                        <a 
+                          href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Akad+Nikah+${encodeURIComponent(wedding.groom.nickname)}+dan+${encodeURIComponent(wedding.bride.nickname)}&dates=20260831T050000Z/20260831T080000Z&details=Selamat+menghadiri+pernikahan+${encodeURIComponent(wedding.groom.nickname)}+dan+${encodeURIComponent(wedding.bride.nickname)}&location=${encodeURIComponent(wedding.akad.venue)}`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          <button type="button" className="calendar-button">Add To Calendar</button>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="section-box">
+                      <h3 className="section-title">Resepsi Pernikahan</h3>
+                      <hr className="divider" />
+                      <div className="section-content">
+                        <p className="font-bold">{formatIndonesianDate(wedding.resepsi.date) || "Senin, 31 Agustus 2026"}</p>
+                        <p>{wedding.resepsi.start || "12:00"} - {wedding.resepsi.end || "selesai"}</p>
+                        <p>{wedding.resepsi.venue || "Aula Masjid ABRI Cimahi - Jalan Gatot Subroto Kota Cimahi"}</p>
+                      </div>
+                      <div className="mt-3">
+                        <a 
+                          href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Resepsi+Pernikahan+${encodeURIComponent(wedding.groom.nickname)}+dan+${encodeURIComponent(wedding.bride.nickname)}&dates=20260831T050000Z/20260831T080000Z&details=Selamat+menghadiri+pernikahan+${encodeURIComponent(wedding.groom.nickname)}+dan+${encodeURIComponent(wedding.bride.nickname)}&location=${encodeURIComponent(wedding.resepsi.venue)}`}
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          <button type="button" className="calendar-button">Add To Calendar</button>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="section-box">
+                      <h3 className="section-title">Turut Mengundang</h3>
+                      <hr className="divider" />
+                      <div className="text-zinc-600 text-[11px] leading-relaxed text-center space-y-1">
+                        <p>Keluarga Besar Mempelai Pria</p>
+                        <p>Keluarga Besar Mempelai Wanita</p>
+                        <p>Rekan Kerja & Sahabat Dekat Kedua Mempelai</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 4. PETA LOKASI */}
+                <section className="frame-section" id="peta-lokasi">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <h2 className="judul-section">Peta Lokasi Pernikahan</h2>
+                    <p className="location-note">
+                      Anda dapat menuju lokasi pernikahan kami dengan bantuan peta dibawah ini. Atau anda bisa buka di
+                    </p>
+
+                    <a 
+                      href={wedding.akad.maps || "https://www.google.com/maps?q=-6.8778538795485575,107.52693846630785"} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="maps-button"
+                    >
+                      Buka di Google Maps
+                    </a>
+
+                    <div className="map-container">
+                      {wedding.akad.maps && wedding.akad.maps.includes("<iframe") ? (
+                        <div 
+                          className="w-full h-full"
+                          dangerouslySetInnerHTML={{ 
+                            __html: wedding.akad.maps
+                              .replace(/width="[0-9%]+"/, 'width="100%"')
+                              .replace(/height="[0-9%]+"/, 'height="100%"') 
+                          }}
+                        />
+                      ) : (
+                        <iframe
+                          src={`https://maps.google.com/maps?q=${encodeURIComponent(wedding.akad.venue || "-6.8778538795485575,107.52693846630785")}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                          width="100%"
+                          height="100%"
+                          style={{ border: 0 }}
+                          allowFullScreen={false}
+                          loading="lazy"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </section>
+
+                {/* 5. GALERI PHOTO */}
+                <section className="frame-section" id="galeri">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <h2 className="judul-section">Galeri Photo</h2>
+                    <p className="text-[11px] text-zinc-500 mb-4">Photo-photo kebahagiaan kami yang kami kenang selalu.</p>
+                    <div className="grid grid-cols-2 gap-2 w-full">
+                      {[
+                        "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/photo-1-47-l.jpg",
+                        "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/photo-1-48-l.jpg",
+                        "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/photo-1-49-l.jpg",
+                        "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/photo-1-50-l.jpg",
+                        "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/photo-1-51-l.jpg",
+                        "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/photo-1-52-l.jpg",
+                      ].map((url, idx) => (
+                        <div key={idx} className="gallery">
+                          <img src={url} alt={`Galeri ${idx + 1}`} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                {/* 6. VIDEO */}
+                <section className="frame-section" id="video">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <h2 className="judul-section">Video</h2>
+                    <p className="text-[11px] text-zinc-500 mb-4">Sudi sejenak melihat kebahagiaan kami melalui video dibawah ini</p>
+                    
+                    <div className="border border-zinc-950 p-2 bg-white w-full">
+                      <div className="relative aspect-video w-full bg-black overflow-hidden flex items-center justify-center">
+                        {isPlayingVideo ? (
+                          <iframe 
+                            src="https://www.youtube.com/embed/hE-1XnJs61w?autoplay=1" 
+                            title="Prewedding Adi dan Rara" 
+                            className="w-full h-full"
+                            allow="autoplay; encrypted-media"
+                            allowFullScreen
+                          />
+                        ) : (
+                          <div 
+                            onClick={() => setIsPlayingVideo(true)}
+                            className="absolute inset-0 cursor-pointer flex items-center justify-center group"
+                          >
+                            <img 
+                              src="https://img.youtube.com/vi/hE-1XnJs61w/hqdefault.jpg" 
+                              alt="Thumbnail" 
+                              className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition"
+                            />
+                            <div className="absolute w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition">
+                              <svg className="w-5 h-5 text-white fill-current" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" />
+                              </svg>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <h5 className="text-xs font-bold text-zinc-900 mt-2 text-left">Prewedding Adi dan Rara</h5>
+                      <p className="text-[10px] text-zinc-500 text-left mt-1">
+                        Saksikan cuplikan video prewedding romantis kami.
+                      </p>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 7. KADO */}
+                <section className="frame-section" id="kado">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <h2 className="judul-section">Kirim Kado</h2>
+                    <p className="text-[11px] text-zinc-500 mb-5">
+                      Terima kasih atas doa dan restu yang telah anda berikan, jika anda ingin mengirimkan kado nikah, silahkan kirim dengan cara dibawah ini. Sebelumnya, kami mengucapkan banyak terima kasih.
+                    </p>
+
+                    <div className="w-full space-y-4">
+                      <div className="card-undangan p-3 bg-white border border-zinc-950 flex flex-col items-center">
+                        <img src="https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/rekening-1-230205022445.png" className="img-fluid max-h-10 mb-2" alt="BSI Logo" />
+                        <div className="text-center text-xs">
+                          <strong className="text-zinc-800">Nama Bank</strong>
+                          <p className="mb-1">Bank Syariah Indonesia</p>
+                          <strong className="text-zinc-800">Nomor Rekening</strong>
+                          <p className="font-mono font-bold text-sm">12345678910</p>
+                          <button 
+                            type="button"
+                            className="btn-primary2" 
+                            onClick={() => {
+                              if (typeof navigator !== "undefined" && navigator.clipboard) {
+                                navigator.clipboard.writeText("12345678910").then(() => {
+                                  toast.success("Nomor rekening BSI disalin!");
+                                }).catch(() => {
+                                  alert("Nomor Rekening Tersalin: 12345678910");
+                                });
+                              } else {
+                                alert("Nomor Rekening Tersalin: 12345678910");
+                              }
+                            }}
+                          >
+                            Copy Rekening
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="card-undangan p-3 bg-white border border-zinc-950 flex flex-col items-center">
+                        <img src="https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/rekening-1-230205114909.png" className="img-fluid max-h-10 mb-2" alt="Mandiri Logo" />
+                        <div className="text-center text-xs">
+                          <strong className="text-zinc-800">Nama Bank</strong>
+                          <p className="mb-1">Bank Mandiri</p>
+                          <strong className="text-zinc-800">Nomor Rekening</strong>
+                          <p className="font-mono font-bold text-sm">12345678910</p>
+                          <button 
+                            type="button"
+                            className="btn-primary2" 
+                            onClick={() => {
+                              if (typeof navigator !== "undefined" && navigator.clipboard) {
+                                navigator.clipboard.writeText("12345678910").then(() => {
+                                  toast.success("Nomor rekening Mandiri disalin!");
+                                }).catch(() => {
+                                  alert("Nomor Rekening Tersalin: 12345678910");
+                                });
+                              } else {
+                                alert("Nomor Rekening Tersalin: 12345678910");
+                              }
+                            }}
+                          >
+                            Copy Rekening
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="card-undangan p-3 bg-white border border-zinc-950">
+                        <img src="https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/kadonikah-1-210627035302.png" alt="Kado Nikah" className="w-full max-h-32 object-contain mb-2" />
+                        <p className="text-[10px] text-zinc-600 leading-relaxed">
+                          Untuk mengirimkan Kado Nikah kepada kami, silahkan kirimkan melalui Saweria kami. Atau melalui Nomor Rekening Bank Mandiri 1320006284864
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 8. KIRIM DOA & UCAPAN */}
+                <section className="frame-section" id="doa-ucapan-kirim">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <h2 className="judul-section">Kirim Doa & Ucapan</h2>
+                    <p className="text-[11px] text-zinc-500 mb-4">Sampaikan ucapan selamat dan doa restu Anda kepada kedua mempelai.</p>
+                    
+                    <form onSubmit={handleSendWish} className="w-full space-y-3 text-left">
+                      <div>
+                        <Label className="text-[9px] uppercase tracking-wider font-bold text-zinc-500">Nama Lengkap</Label>
+                        <Input 
+                          value={wishName}
+                          onChange={(e) => setWishName(e.target.value)}
+                          placeholder="Tulis nama lengkap anda" 
+                          className="text-xs bg-white border border-zinc-950 rounded-none h-8 px-2 focus:ring-0 focus:border-zinc-950"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-[9px] uppercase tracking-wider font-bold text-zinc-500">Hubungan</Label>
+                        <select 
+                          value={wishRelation}
+                          onChange={(e) => setWishRelation(e.target.value)}
+                          className="w-full text-xs bg-white border border-zinc-950 rounded-none h-8 px-1 focus:ring-0 focus:border-zinc-950"
+                        >
+                          <option value="Keluarga">Keluarga</option>
+                          <option value="Sahabat">Sahabat</option>
+                          <option value="Teman">Teman</option>
+                          <option value="Tetangga">Tetangga</option>
+                        </select>
+                      </div>
+                      <div>
+                        <Label className="text-[9px] uppercase tracking-wider font-bold text-zinc-500">Ucapan / Doa</Label>
+                        <Textarea 
+                          value={wishText}
+                          onChange={(e) => setWishText(e.target.value)}
+                          placeholder="Tulis ucapan atau doa untuk kedua mempelai" 
+                          rows={3}
+                          className="text-xs bg-white border border-zinc-950 rounded-none p-2 focus:ring-0 focus:border-zinc-950"
+                          required
+                        />
+                      </div>
+                      <button 
+                        type="submit" 
+                        className="w-full bg-zinc-950 hover:bg-zinc-900 text-white font-bold text-[10px] py-2 px-4 uppercase tracking-wider cursor-pointer border border-zinc-950"
+                      >
+                        Kirim Ucapan
+                      </button>
+                    </form>
+                  </div>
+                </section>
+
+                {/* 9. DOA & UCAPAN TERKIRIM */}
+                <section className="frame-section" id="doa">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    <h2 className="judul-section">Doa dan Ucapan</h2>
+                    
+                    <div className="w-full space-y-3 mt-4 max-h-64 overflow-y-auto pr-1">
+                      {wishes.map((w, idx) => (
+                        <div key={idx} className="p-3 bg-white border border-zinc-950 text-left">
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="font-bold text-xs">{w.name}</span>
+                            <Badge className="bg-zinc-950 text-white text-[8px] rounded-none py-0.5 px-2 font-normal hover:bg-zinc-950">{w.relation || "Teman"}</Badge>
+                          </div>
+                          <p className="text-[11px] text-zinc-700 font-sans italic">"{w.text}"</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+
+                {/* 10. FOOTER */}
+                <section className="frame-section" id="footer">
+                  <div className="frame-wrapper">
+                    <CornerOrnament position="top-left" />
+                    <CornerOrnament position="top-right" />
+                    <CornerOrnament position="bottom-left" />
+                    <CornerOrnament position="bottom-right" />
+                    
+                    <div className="text-center py-2 space-y-3 w-full">
+                      <b className="font-serif text-xs block">{wedding.bride.fullName || "Siti Salamah Azzahra"} & {wedding.groom.fullName || "Adi Sumaryadi"}</b>
+                      <p className="text-[10px] text-zinc-500">Digital Invitation by <a target="_blank" rel="noopener noreferrer" href="https://webnikah.com" className="text-zinc-900 underline font-bold">webnikah.com</a></p>
+                      
+                      <div className="my-2">
+                        <a target="_blank" rel="noopener noreferrer" href="https://webnikah.com">
+                          <img 
+                            src="https://webnikah.com/template/webnikah/images/img-logo.png" 
+                            alt="WebNikah Logo" 
+                            className="mx-auto p-2 bg-white border border-zinc-200 max-h-9 object-contain"
+                          />
+                        </a>
+                      </div>
+                      <div className="text-[9px] text-zinc-400">Copyright © WebNikah. All rights reserved.</div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            ) : (
+              <div key={tabKey} className={`flex-1 overflow-y-auto scrollbar-none w-full animate-tab-slide ${activePkg === "Sakinah" ? "pb-20" : "pb-16"}`}>
+                
+                {/* TAB 1: HOME */}
               {activeTab === "Home" && (
                 <section className={`${isMonochrome ? "bg-white text-zinc-900 relative" : "bg-gradient-to-b from-cream/40 via-background to-background"} min-h-full flex flex-col items-center justify-center p-6 text-center select-none py-20`}>
                   
@@ -958,30 +1606,33 @@ export default function FullScreenInvitation({
                 </section>
               )}
             </div>
+            )}
 
             {/* FIXED BOTTOM NAVIGATION BAR (MAKSIMAL 4 NAVIGASI KUNCI) */}
-            <nav className={`absolute inset-x-0 z-30 h-14 border-t flex items-center justify-around text-[10px] font-bold shadow-[0_-2px_10px_rgba(0,0,0,0.05)] select-none ${isMonochrome ? "bg-white border-zinc-950 text-zinc-900" : "bg-background border-border text-muted-foreground"} ${activePkg === "Sakinah" ? "bottom-5" : "bottom-0"}`}>
-              {[
-                { tab: "Home", icon: HomeIcon },
-                { tab: "Mempelai", icon: Users },
-                { tab: "Undangan", icon: Calendar },
-                { tab: "Map", icon: Compass },
-              ].map((item) => {
-                const isActive = activeTab === item.tab;
-                return (
-                  <button
-                    key={item.tab}
-                    onClick={() => handleTabChange(item.tab)}
-                    className={`flex flex-col items-center justify-center gap-0.5 w-16 h-full transition relative
-                      ${isActive ? (isMonochrome ? "text-zinc-950 font-black" : "text-gold") : (isMonochrome ? "text-zinc-400 hover:text-zinc-900 font-normal" : "hover:text-foreground")}`}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.tab}</span>
-                    {isActive && <span className={`absolute bottom-1 w-4 h-0.5 rounded-full ${isMonochrome ? "bg-zinc-950" : "bg-gold"}`} />}
-                  </button>
-                );
-              })}
-            </nav>
+            {selectedTemplate !== "t9" && (
+              <nav className={`absolute inset-x-0 z-30 h-14 border-t flex items-center justify-around text-[10px] font-bold shadow-[0_-2px_10px_rgba(0,0,0,0.05)] select-none ${isMonochrome ? "bg-white border-zinc-950 text-zinc-900" : "bg-background border-border text-muted-foreground"} ${activePkg === "Sakinah" ? "bottom-5" : "bottom-0"}`}>
+                {[
+                  { tab: "Home", icon: HomeIcon },
+                  { tab: "Mempelai", icon: Users },
+                  { tab: "Undangan", icon: Calendar },
+                  { tab: "Map", icon: Compass },
+                ].map((item) => {
+                  const isActive = activeTab === item.tab;
+                  return (
+                    <button
+                      key={item.tab}
+                      onClick={() => handleTabChange(item.tab)}
+                      className={`flex flex-col items-center justify-center gap-0.5 w-16 h-full transition relative
+                        ${isActive ? (isMonochrome ? "text-zinc-950 font-black" : "text-gold") : (isMonochrome ? "text-zinc-400 hover:text-zinc-900 font-normal" : "hover:text-foreground")}`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.tab}</span>
+                      {isActive && <span className={`absolute bottom-1 w-4 h-0.5 rounded-full ${isMonochrome ? "bg-zinc-950" : "bg-gold"}`} />}
+                    </button>
+                  );
+                })}
+              </nav>
+            )}
 
             {/* WATERMARK KHUSUS PAKET GRATIS (SAKINAH) DI BAWAH BOTTOM BAR */}
             {activePkg === "Sakinah" && (
