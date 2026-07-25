@@ -182,18 +182,23 @@ function Dashboard() {
     }
     setIsAuthorized(true);
 
-    // Muat templatesList dari localStorage jika ada
-    const storedTmpls = localStorage.getItem("sakinah_admin_tmpls");
+    // Muat templatesList dari localStorage jika ada, gabungkan jika ada template bawaan baru
+    const storedTmpls = localStorage.getItem("sakinah_admin_tmpls") || localStorage.getItem("sakinah_admin_templates");
     if (storedTmpls) {
       try {
         const parsed = JSON.parse(storedTmpls);
-        setTemplatesList(parsed.map((t: any) => ({
-          id: t.id,
-          name: t.name,
-          type: t.type === "gratis" ? "Basic" : "Premium",
-          icon: t.thumbnail,
-          popular: t.popular || false
-        })));
+        if (Array.isArray(parsed)) {
+          const mappedStored = parsed.map((t: any) => ({
+            id: t.id,
+            name: t.name,
+            type: t.type === "gratis" ? "Basic" : "Premium",
+            icon: t.thumbnail || t.icon || "👑",
+            popular: t.popular || false
+          }));
+          const existingIds = new Set(mappedStored.map((t: any) => t.id));
+          const missingDefaults = defaultDashboardTemplates.filter((dt) => !existingIds.has(dt.id));
+          setTemplatesList([...mappedStored, ...missingDefaults]);
+        }
       } catch (e) {
         console.error(e);
       }

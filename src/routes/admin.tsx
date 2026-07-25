@@ -484,7 +484,11 @@ function Admin() {
     if (storedTmpls) {
       try {
         const parsed = JSON.parse(storedTmpls);
-        if (Array.isArray(parsed)) tmpls = parsed;
+        if (Array.isArray(parsed)) {
+          const existingIds = new Set(parsed.map((t: any) => t.id));
+          const missingDefaults = defaultTemplates.filter((dt: any) => !existingIds.has(dt.id));
+          tmpls = [...parsed, ...missingDefaults];
+        }
       } catch (e) {
         console.error("Error parsing storedTmpls", e);
       }
@@ -728,7 +732,11 @@ function Admin() {
         if (storedTmpls) {
           try {
             const parsed = JSON.parse(storedTmpls);
-            if (Array.isArray(parsed)) tmpls = parsed;
+            if (Array.isArray(parsed)) {
+              const existingIds = new Set(parsed.map((t: any) => t.id));
+              const missingDefaults = defaultTemplates.filter((dt: any) => !existingIds.has(dt.id));
+              tmpls = [...parsed, ...missingDefaults];
+            }
           } catch (e) {}
         }
         setTemplatesList(tmpls);
@@ -1527,9 +1535,21 @@ function Admin() {
               <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Daftar Template Undangan Pernikahan Sistem ({templatesList.length})
               </h3>
-              <Button onClick={() => setShowAddTemplateModal(true)} className="bg-gold hover:bg-gold/90 text-primary-foreground text-xs rounded-full h-8 px-4 font-semibold">
-                + Tambah Template
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button 
+                  onClick={() => {
+                    handleSaveTemplates(defaultTemplates);
+                    toast.success("Berhasil mensinkronkan ulang seluruh template bawaan sistem!");
+                  }} 
+                  variant="outline" 
+                  className="text-xs rounded-full h-8 px-4 font-semibold border-gold/40 hover:bg-gold/10"
+                >
+                  🔄 Sinkronisasi Template Bawaan
+                </Button>
+                <Button onClick={() => setShowAddTemplateModal(true)} className="bg-gold hover:bg-gold/90 text-primary-foreground text-xs rounded-full h-8 px-4 font-semibold">
+                  + Tambah Template
+                </Button>
+              </div>
             </div>
 
             <div className="rounded-2xl border border-border bg-card overflow-hidden">
