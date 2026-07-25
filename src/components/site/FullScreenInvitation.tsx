@@ -588,15 +588,13 @@ export default function FullScreenInvitation({
         )}
 
         {/* Sound Toggle (Fixed at top-right inside mockup) */}
-        {(selectedTemplate === "t12" || selectedTemplate === "t13") && (
-          <button 
-            type="button"
-            onClick={toggleSound} 
-            className={`absolute top-4 right-4 z-[60] w-10 h-10 border rounded-full flex items-center justify-center shadow-md transition cursor-pointer text-lg font-bold ${selectedTemplate === "t13" ? "bg-stone-900/90 text-amber-300 border-amber-500/50 hover:bg-stone-800" : "bg-white/95 text-zinc-950 border-zinc-950 hover:bg-zinc-100"}`}
-          >
-            {isMuted ? "🔇" : "🔊"}
-          </button>
-        )}
+        <button 
+          type="button"
+          onClick={toggleSound} 
+          className={`absolute top-4 right-4 z-[60] w-10 h-10 border rounded-full flex items-center justify-center shadow-md transition cursor-pointer text-lg font-bold ${selectedTemplate === "t13" ? "bg-stone-900/90 text-amber-300 border-amber-500/50 hover:bg-stone-800" : isMonochrome ? "bg-white/95 text-zinc-950 border-zinc-950 hover:bg-zinc-100" : "bg-white/90 text-foreground border-border hover:bg-white"}`}
+        >
+          {isMuted ? "🔇" : "🔊"}
+        </button>
 
         {/* 1. COVER PAGE (BEFORE OPENING) */}
         {!isOpen ? (
@@ -780,23 +778,20 @@ export default function FullScreenInvitation({
           /* 2. LIVE INVITATION (MAIN INTERACTIVE AREA) */
           <div className={`flex-1 flex flex-col justify-between h-full ${isMonochrome ? "bg-white text-zinc-900" : "bg-background"} overflow-hidden relative`}>
             
-            {/* Tampilan Content Area dengan Animasi transisi tabSlideIn */}
-            {(selectedTemplate === "t12" || selectedTemplate === "t13") ? (
-              <div className={`flex-1 overflow-y-auto scrollbar-none w-full space-y-0 font-sans ${selectedTemplate === "t13" ? "text-amber-100 bg-stone-950" : "text-zinc-900 bg-white"} ${activePkg === "Sakinah" ? "pb-5" : ""}`}>
-                {/* 1. PEMBUKA */}
-                <section className="frame-section" id="pembuka">
-                  <div className="frame-wrapper">
-                    <CornerOrnament position="top-left" />
-                    <CornerOrnament position="top-right" />
-                    <CornerOrnament position="bottom-left" />
-                    <CornerOrnament position="bottom-right" />
+            {/* Tampilan Content Area dengan Animasi transisi single-page scroll */}
+            <div className={`flex-1 overflow-y-auto scrollbar-none w-full space-y-0 font-sans ${selectedTemplate === "t13" ? "text-amber-100 bg-stone-950" : isMonochrome ? "text-zinc-900 bg-white" : theme.bg} ${activePkg === "Sakinah" ? "pb-5" : ""}`}>
+              {/* 1. PEMBUKA */}
+              <section className="frame-section" id="pembuka">
+                <div className="frame-wrapper">
+                  <CornerOrnament position="top-left" />
+                  <CornerOrnament position="top-right" />
+                  <CornerOrnament position="bottom-left" />
+                  <CornerOrnament position="bottom-right" />
 
-                    {/* Bismillah Calligraphy */}
-                    {selectedTemplate === "t13" && (
-                      <div className="text-center my-3 font-arabic text-2xl text-amber-400 tracking-wide">
-                        بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
-                      </div>
-                    )}
+                  {/* Bismillah Calligraphy */}
+                  <div className={`text-center my-3 font-arabic text-2xl tracking-wide ${selectedTemplate === "t13" ? "text-amber-400" : isMonochrome ? "text-zinc-950 font-bold" : theme.textGold}`}>
+                    بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+                  </div>
 
                     {/* Surah Ar-Rum 21 Card */}
                     <div className={`p-4 rounded-xl border text-center mb-6 space-y-2 ${selectedTemplate === "t13" ? "bg-amber-950/30 border-amber-500/30 text-amber-200/90" : "bg-zinc-50 border-zinc-950 text-zinc-800"}`}>
@@ -1251,8 +1246,8 @@ export default function FullScreenInvitation({
                   </div>
                 </section>
               </div>
-            ) : (
-              <div key={tabKey} className={`flex-1 overflow-y-auto scrollbar-none w-full animate-tab-slide ${activePkg === "Sakinah" ? "pb-20" : "pb-16"}`}>
+              {false && (
+                <div key={tabKey} className={`flex-1 overflow-y-auto scrollbar-none w-full animate-tab-slide ${activePkg === "Sakinah" ? "pb-20" : "pb-16"}`}>
                 
                 {/* TAB 1: HOME */}
               {activeTab === "Home" && (
@@ -1573,9 +1568,8 @@ export default function FullScreenInvitation({
                 </section>
               )}
 
-              {/* TAB 4: MAP */}
-              {activeTab === "Map" && (
-                <section className="p-6 space-y-6 py-12 relative">
+              {/* SECT: MAP LOKASI */}
+              <section className="p-6 space-y-6 py-12 relative">
                   {isMonochrome && (
                     <>
                       <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-zinc-950 pointer-events-none" />
@@ -1647,38 +1641,11 @@ export default function FullScreenInvitation({
                       )}
                     </div>
                   </div>
-                </section>
-              )}
+                 </section>
             </div>
-            )}
+          )}
 
-            {/* FIXED BOTTOM NAVIGATION BAR (MAKSIMAL 4 NAVIGASI KUNCI) */}
-            {selectedTemplate !== "t12" && selectedTemplate !== "t13" && (
-              <nav className={`absolute inset-x-0 z-30 h-14 border-t flex items-center justify-around text-[10px] font-bold shadow-[0_-2px_10px_rgba(0,0,0,0.05)] select-none ${isMonochrome ? "bg-white border-zinc-950 text-zinc-900" : "bg-background border-border text-muted-foreground"} ${activePkg === "Sakinah" ? "bottom-5" : "bottom-0"}`}>
-                {[
-                  { tab: "Home", icon: HomeIcon },
-                  { tab: "Mempelai", icon: Users },
-                  { tab: "Undangan", icon: Calendar },
-                  { tab: "Map", icon: Compass },
-                ].map((item) => {
-                  const isActive = activeTab === item.tab;
-                  return (
-                    <button
-                      key={item.tab}
-                      onClick={() => handleTabChange(item.tab)}
-                      className={`flex flex-col items-center justify-center gap-0.5 w-16 h-full transition relative
-                        ${isActive ? (isMonochrome ? "text-zinc-950 font-black" : "text-gold") : (isMonochrome ? "text-zinc-400 hover:text-zinc-900 font-normal" : "hover:text-foreground")}`}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.tab}</span>
-                      {isActive && <span className={`absolute bottom-1 w-4 h-0.5 rounded-full ${isMonochrome ? "bg-zinc-950" : "bg-gold"}`} />}
-                    </button>
-                  );
-                })}
-              </nav>
-            )}
-
-            {/* WATERMARK KHUSUS PAKET GRATIS (SAKINAH) DI BAWAH BOTTOM BAR */}
+            {/* WATERMARK KHUSUS PAKET GRATIS (SAKINAH) DI BAWAH */}
             {activePkg === "Sakinah" && (
               <div className={`absolute bottom-0 inset-x-0 z-30 h-5 border-t flex items-center justify-center text-[8px] font-semibold select-none ${isMonochrome ? "bg-zinc-100 border-zinc-200 text-zinc-600" : "bg-rose-50 border-rose-100 text-rose-600 dark:bg-rose-950/30 dark:border-rose-900/40"}`}>
                 Undangan ini dibuat gratis menggunakan <span className={`font-bold ml-1 ${isMonochrome ? "text-zinc-900" : "text-rose-700 dark:text-rose-400"}`}>{getBaseDomain()}</span>
