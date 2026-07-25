@@ -387,7 +387,9 @@ export default function FullScreenInvitation({
     setWedding(storedData);
     setActivePkg(getStoredPackage());
     
-    const savedTemplate = (subdomain && localStorage.getItem(`sakinah_selected_template_${subdomain}`)) || localStorage.getItem("sakinah_selected_template") || "sakinah";
+    const searchParams = new URLSearchParams(window.location.search);
+    const urlTemplate = searchParams.get("template") || searchParams.get("theme");
+    const savedTemplate = urlTemplate || (subdomain && localStorage.getItem(`sakinah_selected_template_${subdomain}`)) || localStorage.getItem("sakinah_selected_template") || "sakinah";
     setSelectedTemplate(savedTemplate);
 
     // Dengarkan jika ada perubahan data, paket, atau tema
