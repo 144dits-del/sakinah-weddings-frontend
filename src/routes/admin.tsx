@@ -331,16 +331,16 @@ function Admin() {
     const isSweet = norm === "t8" || norm === "blossom";
     const isSakinah = norm === "t10" || norm === "t1";
     const isCobaBuatkan = norm === "t11";
-    const isInvisimple = norm === "t13" || norm === "salma";
+    const isSalmaRizal = norm === "t13";
 
-    if (isInvisimple) {
+    if (isSalmaRizal) {
       return {
-        bg: "bg-gradient-to-br from-[#0d1311] via-[#141f1a] to-[#0d1311]",
-        text: "text-[#f1f5f9]",
-        primary: "#10b981",
+        bg: "bg-gradient-to-br from-[#2c2724] via-[#1a1715] to-[#3a332e]",
+        text: "text-amber-100",
+        primary: "#d4af37",
         fontHead: "font-serif",
-        emoji: "💍",
-        badge: "bg-emerald-600 text-white"
+        emoji: "👑",
+        badge: "bg-amber-600 text-stone-950 font-bold"
       };
     }
 

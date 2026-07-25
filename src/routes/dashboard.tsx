@@ -91,7 +91,7 @@ const defaultDashboardTemplates = [
   { id: "t9", name: "Nikah Monochrome", type: "Premium", bg: "from-zinc-800 to-zinc-950", icon: "🖤", popular: true },
   { id: "t10", name: "Nikah Sakinah", type: "Premium", bg: "from-amber-100 via-stone-50 to-amber-50", icon: "🦢", popular: true },
   { id: "t12", name: "Monochrome Scroll", type: "Premium", bg: "from-zinc-900 to-black border-2 border-zinc-950", icon: "🖤", popular: true },
-  { id: "t13", name: "Salma & Rizal (Invisimple)", type: "Premium", bg: "from-emerald-900 via-stone-900 to-teal-950", icon: "💍", popular: true },
+  { id: "t13", name: "Salma & Rizal Elegant", type: "Premium", bg: "from-amber-900 via-amber-950 to-stone-900", icon: "👑", popular: true },
 ];
 
 function Dashboard() {
