@@ -56,6 +56,23 @@ function Preview() {
     const isSweet = norm === "t8" || norm === "blossom";
     const isSakinah = norm === "t10";
     const isCobaBuatkan = norm === "t11";
+    const isInvisimple = norm === "t13" || norm === "salma";
+
+    if (isInvisimple) {
+      return {
+        bg: "bg-[#111815] text-[#e2e8f0] min-h-screen",
+        coverBg: "bg-gradient-to-b from-[#0d1311] via-[#141f1a] to-[#0d1311] text-[#f1f5f9]",
+        cardBg: "rounded-2xl border border-emerald-500/20 bg-[#16221d]/90 backdrop-blur-md p-6 text-center relative overflow-hidden shadow-2xl text-[#f1f5f9]",
+        btn: "bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-semibold cursor-pointer border-0 shadow-lg shadow-emerald-900/30",
+        btnOutline: "border-emerald-500/30 hover:bg-emerald-500/10 text-emerald-400 rounded-full text-xs cursor-pointer bg-transparent",
+        textGold: "text-emerald-400 font-serif font-bold tracking-wide",
+        fontHead: "font-serif",
+        borderGold: "border-emerald-500/20",
+        badge: "bg-emerald-600 text-white",
+        avatar: "bg-gradient-to-br from-emerald-600 to-teal-800 text-white rounded-full",
+        emoji: "💍"
+      };
+    }
 
     if (isCobaBuatkan) {
       return {

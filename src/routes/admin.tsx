@@ -331,6 +331,18 @@ function Admin() {
     const isSweet = norm === "t8" || norm === "blossom";
     const isSakinah = norm === "t10" || norm === "t1";
     const isCobaBuatkan = norm === "t11";
+    const isInvisimple = norm === "t13" || norm === "salma";
+
+    if (isInvisimple) {
+      return {
+        bg: "bg-gradient-to-br from-[#0d1311] via-[#141f1a] to-[#0d1311]",
+        text: "text-[#f1f5f9]",
+        primary: "#10b981",
+        fontHead: "font-serif",
+        emoji: "💍",
+        badge: "bg-emerald-600 text-white"
+      };
+    }
 
     if (isCobaBuatkan) {
       return {

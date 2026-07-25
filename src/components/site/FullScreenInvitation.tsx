@@ -504,9 +504,18 @@ export default function FullScreenInvitation({
       {/* Container utama: Terpusat di PC (max-w-md), alami 100% di HP */}
       <div className={`w-full max-w-md ${isMonochrome ? "bg-white border-2 border-zinc-950 text-zinc-900" : "bg-background border border-border/40 md:rounded-[2rem]"} min-h-screen md:min-h-[800px] md:h-[840px] overflow-hidden shadow-2xl relative flex flex-col justify-between`}>
         
-        {selectedTemplate === "t12" && (
+        {(selectedTemplate === "t12" || selectedTemplate === "t13") && (
           <style dangerouslySetInnerHTML={{ __html: `
-            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,400..700;1,400..700&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Sora:wght@300;400;600;700&display=swap');
+            .font-pinyon {
+              font-family: 'Pinyon Script', cursive !important;
+            }
+            .font-cormorant {
+              font-family: 'Cormorant Infant', Georgia, serif !important;
+            }
+            .font-sora {
+              font-family: 'Sora', sans-serif !important;
+            }
             .font-serif {
               font-family: 'Playfair Display', Georgia, serif !important;
             }
@@ -558,15 +567,23 @@ export default function FullScreenInvitation({
               text-align: center;
               border-radius: 0px !important;
             }
+            .invisimple-card {
+              background: rgba(22, 34, 29, 0.85);
+              border: 1px solid rgba(16, 185, 129, 0.25);
+              backdrop-filter: blur(12px);
+              border-radius: 1.25rem;
+              padding: 1.5rem 1rem;
+              color: #f1f5f9;
+            }
           `}} />
         )}
 
         {/* Sound Toggle (Fixed at top-right inside mockup) */}
-        {selectedTemplate === "t12" && (
+        {(selectedTemplate === "t12" || selectedTemplate === "t13") && (
           <button 
             type="button"
             onClick={toggleSound} 
-            className="absolute top-4 right-4 z-[60] w-10 h-10 bg-white/95 border border-zinc-950 rounded-full flex items-center justify-center shadow-md hover:bg-zinc-100 transition cursor-pointer text-lg font-bold"
+            className={`absolute top-4 right-4 z-[60] w-10 h-10 rounded-full flex items-center justify-center shadow-md transition cursor-pointer text-lg font-bold ${selectedTemplate === "t13" ? "bg-[#16221d]/90 border border-emerald-500/40 text-emerald-400 hover:bg-[#1f312a]" : "bg-white/95 border border-zinc-950 text-zinc-900 hover:bg-zinc-100"}`}
           >
             {isMuted ? "🔇" : "🔊"}
           </button>
@@ -574,7 +591,66 @@ export default function FullScreenInvitation({
 
         {/* 1. COVER PAGE (BEFORE OPENING) */}
         {!isOpen ? (
-          selectedTemplate === "t12" ? (
+          selectedTemplate === "t13" ? (
+            <section className="absolute inset-0 z-50 bg-gradient-to-b from-[#0a120e] via-[#121f19] to-[#0a120e] flex flex-col items-center justify-center text-center p-6 select-none overflow-hidden animate-fade-in font-sora text-slate-100">
+              <div className="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80')] bg-cover bg-center pointer-events-none" />
+              <div className="relative z-10 w-full max-w-xs mx-auto border border-emerald-500/30 rounded-3xl p-6 bg-[#0f1b15]/80 backdrop-blur-md shadow-2xl flex flex-col items-center">
+                
+                <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-emerald-400/40 mb-4 p-1 shadow-lg shadow-emerald-950/50">
+                  <img 
+                    src="https://the.invisimple.id/wp-content/uploads/jet-form-builder/d0a24f3e4478f0f3c7a3982a784bcc25/2026/04/1000507989.jpg" 
+                    alt="Salma & Rizal" 
+                    className="w-full h-full object-cover rounded-full"
+                    onError={(e) => {
+                      (e.target as HTMLElement).setAttribute("src", "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=600&q=80");
+                    }}
+                  />
+                </div>
+
+                <div className="text-[9px] tracking-[0.4em] uppercase text-emerald-400 font-bold mb-1">THE WEDDING OF</div>
+                
+                <h1 className="font-pinyon text-5xl text-emerald-300 my-1 drop-shadow-md leading-tight">
+                  {wedding.bride.nickname || "Salma"} & {wedding.groom.nickname || "Rizal"}
+                </h1>
+                
+                <p className="text-[11px] text-slate-300 font-serif italic mt-1">
+                  {formatIndonesianDate(wedding.akad.date) || "Minggu, 19 Juli 2026"}
+                </p>
+
+                {/* Countdown */}
+                <div className="grid grid-cols-4 gap-1.5 my-4 w-full">
+                  {[
+                    { v: countdown.days, l: "Hari" },
+                    { v: countdown.hours, l: "Jam" },
+                    { v: countdown.minutes, l: "Menit" },
+                    { v: countdown.seconds, l: "Detik" },
+                  ].map((item, idx) => (
+                    <div key={idx} className="bg-[#182921] border border-emerald-500/30 rounded-xl p-2 text-center">
+                      <span className="text-sm font-bold text-emerald-300 block leading-none">{item.v.toString().padStart(2, "0")}</span>
+                      <p className="text-[7px] uppercase tracking-wider text-slate-400 font-semibold mt-1 leading-none">{item.l}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-center text-xs text-slate-300 mt-1">
+                  <span className="text-[10px] text-slate-400 uppercase tracking-widest block mb-0.5">Kepada Yth. Bapak/Ibu/Saudara/i:</span>
+                  <p className="font-bold text-sm text-emerald-300 capitalize leading-relaxed">
+                    {guestName || "Tamu Undangan"}
+                  </p>
+                  {guestAddress && <p className="text-[10px] text-slate-400 capitalize">di {guestAddress}</p>}
+                </div>
+
+                <button 
+                  type="button"
+                  className="mt-5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold tracking-wider text-[11px] py-3 px-8 rounded-full uppercase transition duration-300 cursor-pointer shadow-lg shadow-emerald-950/60 border border-emerald-400/30 flex items-center gap-2"
+                  onClick={handleBukaUndangan}
+                >
+                  <Heart className="w-3.5 h-3.5 fill-white text-white animate-pulse" />
+                  Buka Undangan
+                </button>
+              </div>
+            </section>
+          ) : selectedTemplate === "t12" ? (
             <section className="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center text-center p-6 select-none overflow-hidden animate-fade-in font-sans">
               <div className="cover-frame">
                 <CornerOrnament position="top-left" />
@@ -753,7 +829,355 @@ export default function FullScreenInvitation({
           <div className={`flex-1 flex flex-col justify-between h-full ${isMonochrome ? "bg-white text-zinc-900" : "bg-background"} overflow-hidden relative`}>
             
             {/* Tampilan Content Area dengan Animasi transisi tabSlideIn */}
-            {selectedTemplate === "t12" ? (
+            {selectedTemplate === "t13" ? (
+              <div className={`flex-1 overflow-y-auto scrollbar-none w-full space-y-5 text-slate-100 bg-gradient-to-b from-[#0c1411] via-[#121f1a] to-[#0c1411] font-sora p-4 ${activePkg === "Sakinah" ? "pb-8" : "pb-4"}`}>
+                
+                {/* 1. HERO / AYAT AL-QURAN */}
+                <section className="invisimple-card text-center space-y-3 relative overflow-hidden">
+                  <div className="text-emerald-400 font-serif text-xl font-bold tracking-widest leading-relaxed">
+                    بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+                  </div>
+                  <p className="text-[11px] text-slate-300 italic leading-relaxed font-serif">
+                    "Dan di antara tanda-tanda (kebesaran-Nya) ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."
+                  </p>
+                  <span className="text-[10px] text-emerald-400 font-bold block">(QS. Ar-Rum: 21)</span>
+                </section>
+
+                {/* 2. MEMPELAI PROFILES */}
+                <section className="invisimple-card text-center space-y-5">
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-emerald-400 font-bold">Mempelai Wanita & Pria</span>
+                    <h2 className="font-pinyon text-4xl text-emerald-300">Pasangan Bahagia</h2>
+                  </div>
+
+                  {/* Profile Salma */}
+                  <div className="p-4 rounded-2xl bg-[#0f1b15] border border-emerald-500/20 space-y-2">
+                    <div className="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-emerald-400/40 p-1 shadow-md">
+                      <img 
+                        src="https://the.invisimple.id/wp-content/uploads/jet-form-builder/d0a24f3e4478f0f3c7a3982a784bcc25/2026/04/1000507989.jpg" 
+                        alt={wedding.bride.fullName || "Salma (Salsabila Amelia)"} 
+                        className="w-full h-full object-cover rounded-full"
+                        onError={(e) => {
+                          (e.target as HTMLElement).setAttribute("src", "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=400&q=80");
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-pinyon text-3xl text-emerald-300 font-bold leading-tight">
+                        {wedding.bride.fullName || "Salsabila Amelia (Salma)"}
+                      </h3>
+                      <p className="text-[10px] text-slate-400 mt-1">
+                        Putri dari Bpk. <span className="text-slate-200 font-semibold">{wedding.bride.father || "Usman"}</span> & Ibu <span className="text-slate-200 font-semibold">{wedding.bride.mother || "Amelia"}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="font-pinyon text-3xl text-emerald-400 my-1">&</div>
+
+                  {/* Profile Rizal */}
+                  <div className="p-4 rounded-2xl bg-[#0f1b15] border border-emerald-500/20 space-y-2">
+                    <div className="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-emerald-400/40 p-1 shadow-md">
+                      <img 
+                        src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80" 
+                        alt={wedding.groom.fullName || "Rizal"} 
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-pinyon text-3xl text-emerald-300 font-bold leading-tight">
+                        {wedding.groom.fullName || "Rizal Fitrianto"}
+                      </h3>
+                      <p className="text-[10px] text-slate-400 mt-1">
+                        Putra dari Bpk. <span className="text-slate-200 font-semibold">{wedding.groom.father || "Harun"}</span> & Ibu <span className="text-slate-200 font-semibold">{wedding.groom.mother || "Rizal"}</span>
+                      </p>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 3. ACARA PERNIKAHAN */}
+                <section className="invisimple-card space-y-4 text-center">
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-emerald-400 font-bold">Rangkaian Acara</span>
+                    <h2 className="font-pinyon text-4xl text-emerald-300">Waktu & Tempat</h2>
+                  </div>
+
+                  {/* Akad Nikah */}
+                  <div className="p-4 rounded-2xl bg-[#0f1b15] border border-emerald-500/30 text-left space-y-2 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 px-3 py-1 bg-emerald-600/30 text-emerald-300 text-[9px] font-bold rounded-bl-xl border-l border-b border-emerald-500/30">
+                      Akad Nikah
+                    </div>
+                    <h3 className="font-bold text-xs text-emerald-300 flex items-center gap-1.5 pt-1">
+                      <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                      {formatIndonesianDate(wedding.akad.date) || "Minggu, 19 Juli 2026"}
+                    </h3>
+                    <p className="text-[10px] text-slate-300">
+                      ⏰ Pukul {wedding.akad.start || "08:00"} - {wedding.akad.end || "10:00"} WIB
+                    </p>
+                    <p className="text-[10px] text-slate-400 flex items-start gap-1 pt-0.5">
+                      <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{wedding.akad.venue || "Gedung Pernikahan Grand Ballroom, Jakarta"}</span>
+                    </p>
+                    <div className="pt-1">
+                      <a 
+                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Akad+Nikah+${encodeURIComponent(wedding.groom.nickname)}+dan+${encodeURIComponent(wedding.bride.nickname)}&dates=20260719T010000Z/20260719T030000Z&details=Selamat+menghadiri+pernikahan+${encodeURIComponent(wedding.groom.nickname)}+dan+${encodeURIComponent(wedding.bride.nickname)}&location=${encodeURIComponent(wedding.akad.venue)}`}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[9px] bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 py-1 px-3 rounded-full font-semibold transition"
+                      >
+                        📅 Add to Google Calendar
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Resepsi Nikah */}
+                  <div className="p-4 rounded-2xl bg-[#0f1b15] border border-emerald-500/30 text-left space-y-2 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 px-3 py-1 bg-teal-600/30 text-teal-300 text-[9px] font-bold rounded-bl-xl border-l border-b border-teal-500/30">
+                      Resepsi
+                    </div>
+                    <h3 className="font-bold text-xs text-emerald-300 flex items-center gap-1.5 pt-1">
+                      <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                      {formatIndonesianDate(wedding.resepsi.date) || "Minggu, 19 Juli 2026"}
+                    </h3>
+                    <p className="text-[10px] text-slate-300">
+                      ⏰ Pukul {wedding.resepsi.start || "11:00"} - {wedding.resepsi.end || "14:00"} WIB
+                    </p>
+                    <p className="text-[10px] text-slate-400 flex items-start gap-1 pt-0.5">
+                      <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                      <span>{wedding.resepsi.venue || "Gedung Pernikahan Grand Ballroom, Jakarta"}</span>
+                    </p>
+                    <div className="pt-1">
+                      <a 
+                        href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=Resepsi+Pernikahan+${encodeURIComponent(wedding.groom.nickname)}+dan+${encodeURIComponent(wedding.bride.nickname)}&dates=20260719T040000Z/20260719T070000Z&details=Selamat+menghadiri+pernikahan+${encodeURIComponent(wedding.groom.nickname)}+dan+${encodeURIComponent(wedding.bride.nickname)}&location=${encodeURIComponent(wedding.resepsi.venue)}`}
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[9px] bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 py-1 px-3 rounded-full font-semibold transition"
+                      >
+                        📅 Add to Google Calendar
+                      </a>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 4. PETA LOKASI */}
+                <section className="invisimple-card space-y-3 text-center">
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-emerald-400 font-bold">Lokasi Acara</span>
+                    <h2 className="font-pinyon text-4xl text-emerald-300">Google Maps</h2>
+                  </div>
+
+                  <a 
+                    href={wedding.akad.maps || "https://maps.google.com"} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-[11px] font-bold py-2 px-5 rounded-full shadow-lg transition transform hover:scale-105"
+                  >
+                    <MapPin className="w-3.5 h-3.5" /> Buka Google Maps
+                  </a>
+
+                  <div className="h-40 w-full rounded-xl overflow-hidden border border-emerald-500/30 bg-[#0f1b15]">
+                    {wedding.akad.maps && wedding.akad.maps.includes("<iframe") ? (
+                      <div 
+                        className="w-full h-full"
+                        dangerouslySetInnerHTML={{ 
+                          __html: wedding.akad.maps
+                            .replace(/width="[0-9%]+"/, 'width="100%"')
+                            .replace(/height="[0-9%]+"/, 'height="100%"') 
+                        }}
+                      />
+                    ) : (
+                      <iframe
+                        src={`https://maps.google.com/maps?q=${encodeURIComponent(wedding.akad.venue || "Jakarta")}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen={false}
+                        loading="lazy"
+                      />
+                    )}
+                  </div>
+                </section>
+
+                {/* 5. LOVE STORY TIMELINE */}
+                <section className="invisimple-card space-y-3 text-center">
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-emerald-400 font-bold">Perjalanan Cinta</span>
+                    <h2 className="font-pinyon text-4xl text-emerald-300">Kisah Kami</h2>
+                  </div>
+                  <div className="text-left space-y-3 pl-3 border-l-2 border-emerald-500/40 ml-2">
+                    {[
+                      { date: "Oktober 2021", title: "Pertama Bertemu", desc: "Pertama kali berkenalan dan saling bertukar cerita." },
+                      { date: "Maret 2024", title: "Lamaran", desc: "Kedua keluarga besar resmi mengikat niat suci." },
+                      { date: "Juli 2026", title: "Pernikahan", desc: "Hari bahagia ucapan janji suci seumur hidup." },
+                    ].map((st, idx) => (
+                      <div key={idx} className="relative pl-4 space-y-0.5">
+                        <div className="absolute -left-[21px] top-1.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#0c1411]" />
+                        <span className="text-[9px] text-emerald-400 font-bold block">{st.date}</span>
+                        <h4 className="font-bold text-xs text-slate-100">{st.title}</h4>
+                        <p className="text-[10px] text-slate-400">{st.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* 6. GALERI PHOTO & VIDEO */}
+                <section className="invisimple-card space-y-3 text-center">
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-emerald-400 font-bold">Dokumentasi</span>
+                    <h2 className="font-pinyon text-4xl text-emerald-300">Galeri & Video</h2>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80",
+                      "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=400&q=80",
+                      "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=400&q=80",
+                      "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=400&q=80",
+                    ].map((imgUrl, i) => (
+                      <div key={i} className="aspect-square rounded-xl overflow-hidden border border-emerald-500/20 shadow-md">
+                        <img src={imgUrl} alt={`Foto ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition" />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Embedded Video Player */}
+                  <div className="pt-1">
+                    <div className="relative aspect-video w-full rounded-xl overflow-hidden border border-emerald-500/30 bg-black">
+                      {isPlayingVideo ? (
+                        <iframe 
+                          src="https://www.youtube.com/embed/hE-1XnJs61w?autoplay=1" 
+                          title="Video Prewedding" 
+                          className="w-full h-full"
+                          allow="autoplay; encrypted-media"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <div 
+                          onClick={() => setIsPlayingVideo(true)}
+                          className="absolute inset-0 cursor-pointer flex items-center justify-center group"
+                        >
+                          <img 
+                            src="https://img.youtube.com/vi/hE-1XnJs61w/hqdefault.jpg" 
+                            alt="Prewedding Video Thumbnail" 
+                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition"
+                          />
+                          <div className="absolute w-10 h-10 bg-emerald-600/90 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition border border-emerald-400">
+                            <svg className="w-4 h-4 text-white fill-current ml-0.5" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </section>
+
+                {/* 7. KADO DIGITAL */}
+                <section className="invisimple-card space-y-3 text-center">
+                  <div className="space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-emerald-400 font-bold">Cashless Gift</span>
+                    <h2 className="font-pinyon text-4xl text-emerald-300">Kirim Kado</h2>
+                  </div>
+                  <p className="text-[10px] text-slate-300 leading-relaxed">
+                    Doa restu Anda adalah kado terindah bagi kami. Namun jika ingin memberi kado cashless, dapat dikirim via rekening berikut:
+                  </p>
+
+                  <div className="space-y-2 pt-1">
+                    <div className="p-3 rounded-xl bg-[#0f1b15] border border-emerald-500/30 text-center space-y-0.5">
+                      <span className="text-xs font-bold text-emerald-400 block">Bank BCA</span>
+                      <span className="text-sm font-mono font-bold text-white block">8830492019</span>
+                      <span className="text-[10px] text-slate-400 block mb-1">a.n. Salma & Rizal</span>
+                      <button 
+                        type="button"
+                        className="bg-emerald-600/40 hover:bg-emerald-600 text-emerald-300 hover:text-white text-[10px] font-bold py-1 px-4 rounded-full border border-emerald-500/40 transition cursor-pointer"
+                        onClick={() => {
+                          if (navigator.clipboard) {
+                            navigator.clipboard.writeText("8830492019");
+                            toast.success("Nomor rekening BCA disalin!");
+                          }
+                        }}
+                      >
+                        Copy No. Rekening
+                      </button>
+                    </div>
+
+                    <div className="p-3 rounded-xl bg-[#0f1b15] border border-emerald-500/30 text-center space-y-0.5">
+                      <span className="text-xs font-bold text-emerald-400 block">Bank Mandiri</span>
+                      <span className="text-sm font-mono font-bold text-white block">1320006284864</span>
+                      <span className="text-[10px] text-slate-400 block mb-1">a.n. Salma & Rizal</span>
+                      <button 
+                        type="button"
+                        className="bg-emerald-600/40 hover:bg-emerald-600 text-emerald-300 hover:text-white text-[10px] font-bold py-1 px-4 rounded-full border border-emerald-500/40 transition cursor-pointer"
+                        onClick={() => {
+                          if (navigator.clipboard) {
+                            navigator.clipboard.writeText("1320006284864");
+                            toast.success("Nomor rekening Mandiri disalin!");
+                          }
+                        }}
+                      >
+                        Copy No. Rekening
+                      </button>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 8. KIRIM DOA & RESTU */}
+                <section className="invisimple-card space-y-3">
+                  <div className="text-center space-y-0.5">
+                    <span className="text-[9px] uppercase tracking-[0.3em] text-emerald-400 font-bold">Doa & Ucapan</span>
+                    <h2 className="font-pinyon text-4xl text-emerald-300">RSVP & Wishes</h2>
+                  </div>
+
+                  <form onSubmit={handleSendWish} className="space-y-2.5 text-left">
+                    <div>
+                      <Label className="text-[9px] text-emerald-400 uppercase font-bold">Nama Lengkap</Label>
+                      <Input 
+                        value={wishName}
+                        onChange={(e) => setWishName(e.target.value)}
+                        placeholder="Nama Anda..." 
+                        className="text-xs bg-[#0f1b15] border-emerald-500/30 text-slate-100 h-8 rounded-xl focus:border-emerald-400"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[9px] text-emerald-400 uppercase font-bold">Pesan Doa Restu</Label>
+                      <Textarea 
+                        value={wishText}
+                        onChange={(e) => setWishText(e.target.value)}
+                        placeholder="Tuliskan ucapan selamat..." 
+                        rows={2}
+                        className="text-xs bg-[#0f1b15] border-emerald-500/30 text-slate-100 rounded-xl focus:border-emerald-400"
+                        required
+                      />
+                    </div>
+                    <button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-[10px] py-2 px-4 rounded-xl uppercase tracking-wider cursor-pointer border border-emerald-400/30 shadow-md"
+                    >
+                      Kirim Doa Restu
+                    </button>
+                  </form>
+
+                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    {wishes.map((w, idx) => (
+                      <div key={idx} className="p-2.5 bg-[#0f1b15] border border-emerald-500/20 rounded-xl text-left text-[10px] space-y-0.5">
+                        <div className="flex justify-between items-center font-bold text-emerald-300">
+                          <span>{w.name}</span>
+                          <Badge className="bg-emerald-600 text-white text-[7px]">{w.relation || "Teman"}</Badge>
+                        </div>
+                        <p className="text-slate-300 font-serif italic">"{w.text}"</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* 9. FOOTER */}
+                <footer className="text-center py-3 space-y-1 text-[10px] text-slate-400">
+                  <p className="font-pinyon text-2xl text-emerald-300">Salma & Rizal</p>
+                  <p>Undangan Digital Website oleh <span className="text-emerald-400 font-bold">Invisimple ID</span></p>
+                  <p className="text-[8px] text-slate-500">© 2026 SakinahWeb / Invisimple ID. All rights reserved.</p>
+                </footer>
+              </div>
+            ) : selectedTemplate === "t12" ? (
               <div className={`flex-1 overflow-y-auto scrollbar-none w-full space-y-0 text-zinc-900 bg-white font-sans ${activePkg === "Sakinah" ? "pb-5" : ""}`}>
                 {/* 1. PEMBUKA */}
                 <section className="frame-section" id="pembuka">
@@ -1609,7 +2033,7 @@ export default function FullScreenInvitation({
             )}
 
             {/* FIXED BOTTOM NAVIGATION BAR (MAKSIMAL 4 NAVIGASI KUNCI) */}
-            {selectedTemplate !== "t12" && (
+            {selectedTemplate !== "t12" && selectedTemplate !== "t13" && (
               <nav className={`absolute inset-x-0 z-30 h-14 border-t flex items-center justify-around text-[10px] font-bold shadow-[0_-2px_10px_rgba(0,0,0,0.05)] select-none ${isMonochrome ? "bg-white border-zinc-950 text-zinc-900" : "bg-background border-border text-muted-foreground"} ${activePkg === "Sakinah" ? "bottom-5" : "bottom-0"}`}>
                 {[
                   { tab: "Home", icon: HomeIcon },
