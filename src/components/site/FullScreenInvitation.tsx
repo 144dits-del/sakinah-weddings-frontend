@@ -522,7 +522,7 @@ export default function FullScreenInvitation({
         
         {(selectedTemplate === "t12" || selectedTemplate === "t13") && (
           <style dangerouslySetInnerHTML={{ __html: `
-            @import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Pinyon+Script&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cormorant+Infant:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Pinyon+Script&display=swap');
             .font-serif {
               font-family: ${selectedTemplate === "t13" ? "'Cormorant Infant', 'Playfair Display', Georgia, serif" : "'Playfair Display', Georgia, serif"} !important;
             }
@@ -531,6 +531,9 @@ export default function FullScreenInvitation({
             }
             .font-script {
               font-family: 'Pinyon Script', cursive !important;
+            }
+            .font-arabic {
+              font-family: 'Aref Ruqaa', serif !important;
             }
             .frame-section {
               position: relative;
@@ -788,6 +791,13 @@ export default function FullScreenInvitation({
                     <CornerOrnament position="bottom-left" />
                     <CornerOrnament position="bottom-right" />
 
+                    {/* Bismillah Calligraphy */}
+                    {selectedTemplate === "t13" && (
+                      <div className="text-center my-3 font-arabic text-2xl text-amber-400 tracking-wide">
+                        بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
+                      </div>
+                    )}
+
                     {/* Surah Ar-Rum 21 Card */}
                     <div className={`p-4 rounded-xl border text-center mb-6 space-y-2 ${selectedTemplate === "t13" ? "bg-amber-950/30 border-amber-500/30 text-amber-200/90" : "bg-zinc-50 border-zinc-950 text-zinc-800"}`}>
                       <div className="text-[10px] uppercase font-bold tracking-widest text-amber-400">QS. AR-RUM : 21</div>
@@ -798,7 +808,7 @@ export default function FullScreenInvitation({
 
                     <p className="salam text-xs leading-relaxed mb-4">
                       Assalamu'alaikum Warahmatullah Wabarakatuh<br />
-                      Dengan Rahmat Allah yang Maha Kuasa InsyaAllah kami akan melangsungkan pernikahan pada:
+                      Maha Suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah semoga ridho-Mu tercurah mengiringi pernikahan kami:
                     </p>
                     <div className="info-acara text-xs font-bold mb-5 space-y-1">
                       <p><span className="emoji mr-1">📅</span>{formatIndonesianDate(wedding.akad.date) || "Minggu, 19 Juli 2026"}</p>
