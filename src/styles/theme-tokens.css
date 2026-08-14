@@ -269,3 +269,30 @@
   box-shadow: var(--shadow-card);
   padding: var(--space-5);
 }
+
+/* ==========================================================================
+   06 ANIMATION GUIDELINES — REVEAL & MOTION SYSTEM
+   ========================================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: transform, opacity;
+  transition: opacity var(--duration-base, 400ms) var(--ease-standard),
+              transform var(--duration-base, 400ms) var(--ease-standard);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Reduced Motion Respect */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal.is-visible,
+  .theme-btn-primary {
+    transition: opacity 150ms ease-out !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}

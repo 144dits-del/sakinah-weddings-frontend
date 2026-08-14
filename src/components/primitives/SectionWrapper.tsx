@@ -1,5 +1,6 @@
 import React from "react";
 import { Ornament, OrnamentName } from "@/components/ui/Ornament";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 interface SectionWrapperProps {
   id?: string;
@@ -20,12 +21,15 @@ export const SectionWrapper: React.FC<SectionWrapperProps> = ({
   children,
   isEmpty = false,
 }) => {
+  const revealRef = useScrollReveal(0.15);
+
   if (isEmpty) return null;
 
   return (
     <section 
       id={id} 
-      className={`w-full py-[var(--section-padding-y,48px)] px-[var(--section-padding-x,20px)] border-b border-[var(--color-secondary)]/20 theme-container relative ${className}`}
+      ref={revealRef}
+      className={`reveal w-full py-[var(--section-padding-y,48px)] px-[var(--section-padding-x,20px)] border-b border-[var(--color-secondary)]/20 theme-container relative ${className}`}
     >
       {(subTitle || title || ornament) && (
         <div className="text-center space-y-1 mb-6">
