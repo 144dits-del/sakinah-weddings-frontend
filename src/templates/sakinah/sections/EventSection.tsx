@@ -39,7 +39,7 @@ export const EventSection: React.FC<EventSectionProps> = ({
         <div className="text-xs text-muted-foreground mt-3 space-y-2">
           <p className="flex items-center justify-center gap-1.5 font-semibold">
             <Clock className="h-3.5 w-3.5 text-amber-500" />
-            {wedding.akad.time || "08:00 WIB - Selesai"}
+            {wedding.akad.start || "08:00 WIB - Selesai"}
           </p>
           <p className="font-bold text-foreground">
             {formatDate(wedding.akad.date) || "Minggu, 19 Juli 2026"}
@@ -69,7 +69,7 @@ export const EventSection: React.FC<EventSectionProps> = ({
         <div className="text-xs text-muted-foreground mt-3 space-y-2">
           <p className="flex items-center justify-center gap-1.5 font-semibold">
             <Clock className="h-3.5 w-3.5 text-amber-500" />
-            {wedding.resepsi.time || "11:00 WIB - Selesai"}
+            {wedding.resepsi.start || "11:00 WIB - Selesai"}
           </p>
           <p className="font-bold text-foreground">
             {formatDate(wedding.resepsi.date) || "Minggu, 19 Juli 2026"}
