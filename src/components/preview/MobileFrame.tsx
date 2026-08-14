@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Volume2, VolumeX, ArrowUp } from "lucide-react";
 import { WeddingData, dummyWedding } from "@/lib/dummy-data";
+import { weddingToInvitation } from "@/lib/dummy-invitation";
 import { resolveTheme } from "@/lib/theme-resolver";
 import { SECTION_REGISTRY } from "@/components/sections/SectionRegistry";
 
@@ -25,6 +26,7 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const themeConfig = resolveTheme(themeId);
+  const invitation = weddingToInvitation(weddingData, themeId);
   const CoverComponent = SECTION_REGISTRY["cover"];
 
   useEffect(() => {
@@ -114,7 +116,7 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({
         {!isOpen ? (
           <div className="w-full h-full overflow-hidden">
             <CoverComponent
-              data={weddingData}
+              data={invitation}
               guestName={guestName}
               guestAddress={guestAddress}
               onOpenInvitation={handleOpenGate}
@@ -135,7 +137,7 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({
                 return (
                   <div key={`${s.type}-${idx}`} className="scroll-snap-align-start">
                     <Component
-                      data={weddingData}
+                      data={invitation}
                       variant={s.variant}
                       guestName={guestName}
                       guestAddress={guestAddress}

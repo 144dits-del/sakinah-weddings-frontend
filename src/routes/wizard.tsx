@@ -38,7 +38,7 @@ function Wizard() {
       <header className="border-b border-border bg-card">
         <div className="mx-auto max-w-4xl px-4 py-4 flex items-center justify-between">
           <Link to="/" className="font-display text-xl">SakinahWeb</Link>
-          <Link to="/dashboard"><Button variant="ghost" size="sm">Batal</Button></Link>
+          <Link to="/dashboard" search={{ tab: "Dashboard" }}><Button variant="ghost" size="sm">Batal</Button></Link>
         </div>
       </header>
 
@@ -127,7 +127,7 @@ function Wizard() {
                 <div><span className="text-muted-foreground">Resepsi:</span> <b>{data.resepsi.date || "—"} {data.resepsi.start && `(${data.resepsi.start})`}</b></div>
               </div>
               <div className="flex flex-wrap gap-3 justify-center pt-2">
-                <Link to="/dashboard"><Button variant="outline">Masuk Dashboard</Button></Link>
+                <Link to="/dashboard" search={{ tab: "Dashboard" }}><Button variant="outline">Masuk Dashboard</Button></Link>
                 <Link to="/preview"><Button className="bg-gold hover:bg-gold/90 text-primary-foreground">Lihat Website</Button></Link>
               </div>
             </div>

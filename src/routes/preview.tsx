@@ -393,7 +393,7 @@ function Preview() {
       
       {/* Tombol Kembali & Toggle Mode */}
       <div className={`w-full ${previewModePhone ? "max-w-md" : "max-w-5xl"} mb-4 flex justify-between items-center px-2 transition-all duration-300`}>
-        <Link to="/dashboard">
+        <Link to="/dashboard" search={{ tab: "Dashboard" }}>
           <Button size="sm" variant="outline" className="rounded-full text-xs font-semibold">
             ← Dashboard
           </Button>

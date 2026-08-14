@@ -123,6 +123,7 @@ export default function FullScreenInvitation({
     const isMawaddah = norm === "t3" || norm === "chic";
     const isLuxury = norm === "dark_gold" || norm === "dark_gold_2" || norm === "t4";
     const isGarden = norm === "bloom" || norm === "t5" || norm === "bloom_bliss" || norm === "blossom_celebration";
+    const isSakinah = norm === "t10" || norm === "sakinah";
     const isRoyal = norm === "t7";
     const isSweet = norm === "t8" || norm === "blossom";
     const isSalmaRizal = norm === "t13";

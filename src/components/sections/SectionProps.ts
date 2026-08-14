@@ -1,7 +1,7 @@
-import { WeddingData } from "@/lib/dummy-data";
+import { InvitationData } from "@/lib/types/invitation-data";
 
 export interface SectionProps {
-  data: WeddingData;
+  data: InvitationData;
   variant?: string;
   guestName?: string;
   guestAddress?: string;
