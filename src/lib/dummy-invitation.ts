@@ -96,3 +96,47 @@ export const defaultDummyInvitation: InvitationData = {
     autoplayOnOpen: true,
   },
 };
+
+// Adapter: WeddingData (wizard/dummy) -> InvitationData (section contract)
+export const weddingToInvitation = (
+  w: import("./dummy-data").WeddingData,
+  themeId = "t1",
+): InvitationData => ({
+  ...defaultDummyInvitation,
+  meta: { ...defaultDummyInvitation.meta, slug: w.subdomain, theme: themeId },
+  couple: {
+    ...defaultDummyInvitation.couple,
+    groom: {
+      ...defaultDummyInvitation.couple.groom,
+      fullName: w.groom.fullName || defaultDummyInvitation.couple.groom.fullName,
+      nickname: w.groom.nickname || defaultDummyInvitation.couple.groom.nickname,
+      parentInfo: `Putra dari Bpk. ${w.groom.father} & Ibu ${w.groom.mother}`,
+    },
+    bride: {
+      ...defaultDummyInvitation.couple.bride,
+      fullName: w.bride.fullName || defaultDummyInvitation.couple.bride.fullName,
+      nickname: w.bride.nickname || defaultDummyInvitation.couple.bride.nickname,
+      parentInfo: `Putri dari Bpk. ${w.bride.father} & Ibu ${w.bride.mother}`,
+    },
+  },
+  events: [
+    {
+      label: "Akad Nikah",
+      date: w.akad.date,
+      timeStart: w.akad.start,
+      timeEnd: w.akad.end,
+      venueName: w.akad.venue,
+      venueAddress: w.akad.venue,
+      mapUrl: w.akad.maps,
+    },
+    {
+      label: "Resepsi",
+      date: w.resepsi.date,
+      timeStart: w.resepsi.start,
+      timeEnd: w.resepsi.end,
+      venueName: w.resepsi.venue,
+      venueAddress: w.resepsi.venue,
+      mapUrl: w.resepsi.maps,
+    },
+  ],
+});
