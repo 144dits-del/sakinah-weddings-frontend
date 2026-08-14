@@ -16,6 +16,7 @@ import {
   templates as defaultTemplates,
   setStoredPackage,
 } from "@/lib/dummy-data";
+import { MobileFrame } from "@/components/preview/MobileFrame";
 import {
   Users,
   Globe,
@@ -1603,7 +1604,7 @@ function Admin() {
                             variant="outline"
                             onClick={() => {
                               setPreviewTemplateId(tmpl.id);
-                              navigate({ search: (prev: any) => ({ ...prev, tab: "Preview Template" }) });
+                              window.open(`/preview?theme=${tmpl.id}`, "_blank");
                             }}
                             className="text-[9px] h-7 rounded-full px-3"
                           >
@@ -1744,159 +1745,9 @@ function Admin() {
             </div>
 
             {/* Mobile / Desktop Simulator Frame (Col Span: 8) */}
-            <div className="lg:col-span-8 flex justify-center items-center py-2 bg-muted/20 border border-border/80 rounded-3xl p-6">
-              
+            <div className="lg:col-span-8 flex justify-center items-center py-2 bg-muted/20 border border-border/80 rounded-3xl p-4 overflow-hidden">
               {previewModePhone ? (
-                /* Mobile Simulator Frame */
-                <div className="w-full max-w-sm aspect-[9/19] rounded-[2.5rem] overflow-hidden border-8 border-zinc-950 bg-background shadow-2xl relative flex flex-col justify-between h-[680px] animate-scale-in">
-                  
-                  {/* Simulated Content Area (Floral Elegant White theme as requested) */}
-                  <div className={`flex-1 overflow-y-auto scrollbar-none p-5 pb-16 text-center select-none space-y-4 ${simTheme.bg} ${simTheme.text}`}>
-                    
-                    {/* Visual Header / Floral Graphic representation */}
-                    <div style={{ color: simTheme.primary, borderColor: simTheme.primary + '26' }} className="w-full text-center text-xs py-2 border-b font-serif italic">
-                      {simTheme.emoji} {templatesList.find(t => t.id === previewTemplateId)?.name || "Preview"} Theme {simTheme.emoji}
-                    </div>
-
-                    {mobilePreviewTab === "Home" && (
-                      <div className="py-12 space-y-4 animate-fade-in">
-                        <span className="text-3xl animate-bounce inline-block">{simTheme.emoji}</span>
-                        <div style={{ color: simTheme.primary }} className="text-[9px] tracking-[0.3em] uppercase font-bold">THE WEDDING OF</div>
-                        <h1 style={{ color: simTheme.primary }} className={`text-4xl font-extrabold ${simTheme.fontHead}`}>Adi & Rara</h1>
-                        <p className="text-[10px] text-muted-foreground italic leading-relaxed">
-                          Dengan memohon rahmat & ridho Allah SWT, kami mengundang Anda untuk merayakan pernikahan kami.
-                        </p>
-                        <div style={{ color: simTheme.primary }} className="pt-6 text-xs font-bold">Senin, 31 Agustus 2026</div>
-                      </div>
-                    )}
-
-                    {mobilePreviewTab === "Mempelai" && (
-                      <div className="py-4 space-y-5 text-center animate-fade-in">
-                        <h2 style={{ color: simTheme.primary }} className="font-display text-xl font-semibold">Kedua Mempelai</h2>
-                        
-                        <div style={{ borderColor: simTheme.primary + '33' }} className="p-4 border rounded-2xl bg-white/80 shadow-sm space-y-1">
-                          <div style={{ backgroundColor: simTheme.primary }} className="mx-auto h-12 w-12 rounded-full text-white flex items-center justify-center font-bold text-sm">A</div>
-                          <h3 style={{ color: simTheme.primary }} className="font-bold text-sm mt-2">Adi Sumaryadi</h3>
-                          <p className="text-[9px] text-muted-foreground">Putra dari Sumarmo & Kantun</p>
-                        </div>
-
-                        <div style={{ color: simTheme.primary }} className="text-lg italic">&</div>
-
-                        <div style={{ borderColor: simTheme.primary + '33' }} className="p-4 border rounded-2xl bg-white/80 shadow-sm space-y-1">
-                          <div style={{ backgroundColor: simTheme.primary }} className="mx-auto h-12 w-12 rounded-full text-white flex items-center justify-center font-bold text-sm">R</div>
-                          <h3 style={{ color: simTheme.primary }} className="font-bold text-sm mt-2">Siti Salamah Azzahra</h3>
-                          <p className="text-[9px] text-muted-foreground">Putri dari Maman & Imas</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {mobilePreviewTab === "Undangan" && (
-                      <div className="py-4 space-y-4 animate-fade-in text-center">
-                        <h2 style={{ color: simTheme.primary }} className="font-display text-xl font-semibold">Waktu & Tempat</h2>
-                        
-                        <div style={{ borderColor: simTheme.primary + '33' }} className="p-4 border rounded-2xl bg-white shadow-sm space-y-2">
-                          <h3 style={{ color: simTheme.primary }} className="font-bold text-xs border-b pb-1">Akad Nikah</h3>
-                          <p className="text-[10px] text-muted-foreground">Senin, 31 Agustus 2026</p>
-                          <p className="text-[10px] text-muted-foreground">Pukul 12:00 WIB - Selesai</p>
-                          <p className="text-[9px] font-medium text-stone-600 mt-1">Aula Masjid ABRI Cimahi</p>
-                        </div>
-
-                        <div style={{ borderColor: simTheme.primary + '33' }} className="p-4 border rounded-2xl bg-white shadow-sm space-y-2">
-                          <h3 style={{ color: simTheme.primary }} className="font-bold text-xs border-b pb-1">Resepsi Pernikahan</h3>
-                          <p className="text-[10px] text-muted-foreground">Senin, 31 Agustus 2026</p>
-                          <p className="text-[10px] text-muted-foreground">Pukul 12:00 WIB - Selesai</p>
-                          <p className="text-[9px] font-medium text-stone-600 mt-1">Aula Masjid ABRI Cimahi</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {mobilePreviewTab === "Map" && (
-                      <div className="py-6 space-y-4 animate-fade-in text-center">
-                        <h2 style={{ color: simTheme.primary }} className="font-display text-xl font-semibold">Peta Lokasi</h2>
-                        <div style={{ borderColor: simTheme.primary + '33' }} className="h-32 rounded-xl bg-muted border flex flex-col items-center justify-center p-3">
-                          <MapPin style={{ color: simTheme.primary }} className="h-6 w-6 mb-1" />
-                          <span className="text-[10px] font-bold">Aula Masjid ABRI Cimahi</span>
-                          <span className="text-[8px] text-muted-foreground mt-0.5">Jalan Gatot Subroto Kota Cimahi</span>
-                        </div>
-                        <Button style={{ backgroundColor: simTheme.primary }} size="sm" className="hover:opacity-90 text-white text-[9px] h-7 rounded-full">
-                          Buka Google Maps
-                        </Button>
-                      </div>
-                    )}
-
-                    {mobilePreviewTab === "Cerita" && (
-                      <div className="py-4 space-y-4 animate-fade-in text-left px-2">
-                        <h2 style={{ color: simTheme.primary }} className="font-display text-xl font-semibold text-center mb-2">Kisah Cinta</h2>
-                        <div style={{ borderColor: simTheme.primary + '66' }} className="border-l pl-4 space-y-4 py-1">
-                          <div>
-                            <h4 style={{ color: simTheme.primary }} className="font-bold text-xs">Pertama Kali Berjumpa</h4>
-                            <p className="text-[8px] text-muted-foreground">16 Oktober 2014</p>
-                            <p className="text-[10px] text-stone-600 mt-0.5">Pertama kali berjumpa di kampus.</p>
-                          </div>
-                          <div>
-                            <h4 style={{ color: simTheme.primary }} className="font-bold text-xs">Prosesi Lamaran</h4>
-                            <p className="text-[8px] text-muted-foreground">15 Maret 2015</p>
-                            <p className="text-[10px] text-stone-600 mt-0.5">Pertemuan formal kedua keluarga besar.</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {mobilePreviewTab === "Photo" && (
-                      <div className="py-4 space-y-3 animate-fade-in text-center">
-                        <h2 style={{ color: simTheme.primary }} className="font-display text-xl font-semibold">Galeri Foto</h2>
-                        <div className="grid grid-cols-3 gap-1.5">
-                          {Array.from({ length: 6 }).map((_, i) => (
-                            <div key={i} className="aspect-square bg-stone-200 rounded-lg flex items-center justify-center text-[8px] text-muted-foreground font-semibold">
-                              Photo {i + 1}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {mobilePreviewTab === "Ucapan" && (
-                      <div className="py-4 space-y-4 animate-fade-in text-center">
-                        <h2 style={{ color: simTheme.primary }} className="font-display text-xl font-semibold">Kirim Doa Restu</h2>
-                        <div className="p-3 bg-white border rounded-xl space-y-2 text-left">
-                          <div style={{ color: simTheme.primary }} className="text-[8px] font-bold">Tamu: Budi & Ani</div>
-                          <p className="text-[10px] text-stone-600 leading-relaxed italic">"Selamat menempuh hidup baru ya Rara & Adi! Semoga sakinah mawaddah warahmah."</p>
-                        </div>
-                      </div>
-                    )}
-
-                  </div>
-
-                  {/* Bottom Bar Navigation */}
-                  <nav className="absolute bottom-0 inset-x-0 h-12 bg-white border-t border-border flex items-center justify-around text-[8px] font-bold text-muted-foreground shadow-md z-10 select-none">
-                    {[
-                      { tab: "Home", icon: HomeIcon },
-                      { tab: "Mempelai", icon: Users },
-                      { tab: "Undangan", icon: Calendar },
-                      { tab: "Map", icon: Compass },
-                      { tab: "Cerita", icon: Heart },
-                      { tab: "Photo", icon: ImageIcon },
-                      { tab: "Ucapan", icon: MessageCircle },
-                    ].map((item) => {
-                      const isActive = mobilePreviewTab === item.tab;
-                      return (
-                        <button
-                          key={item.tab}
-                          type="button"
-                          onClick={() => setMobilePreviewTab(item.tab)}
-                          style={{ color: isActive ? simTheme.primary : undefined }}
-                          className={`flex flex-col items-center justify-center gap-0.5 w-12 h-full transition relative border-0 bg-transparent cursor-pointer
-                            ${isActive ? "" : "hover:text-[#8c7853]"}`}
-                        >
-                          <item.icon className="h-3 w-3 shrink-0" />
-                          <span>{item.tab}</span>
-                          {isActive && <span style={{ backgroundColor: simTheme.primary }} className="absolute bottom-1 w-3 h-0.5 rounded-full" />}
-                        </button>
-                      );
-                    })}
-                  </nav>
-
-                </div>
+                <MobileFrame themeId={previewTemplateId} />
               ) : (
                 /* Desktop Simulator Frame */
                 <div className="w-full h-[680px] rounded-[1.5rem] overflow-hidden border border-border bg-background shadow-2xl relative flex flex-col justify-between animate-scale-in">
