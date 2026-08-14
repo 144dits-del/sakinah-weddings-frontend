@@ -30,7 +30,9 @@ import { z } from "zod";
 
 export const Route = createFileRoute("/preview")({
   validateSearch: (search) => z.object({
-    theme: z.string().optional()
+    theme: z.string().optional(),
+    invitationId: z.string().optional(),
+    to: z.string().optional(),
   }).parse(search),
   component: Preview,
 });
