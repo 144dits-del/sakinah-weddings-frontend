@@ -1,30 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { SectionWrapper } from "@/components/primitives/SectionWrapper";
 import { SectionProps } from "./SectionProps";
 
-export const GallerySection: React.FC<SectionProps> = () => {
-  const images = [
-    "https://images.unsplash.com/photo-1519741497674-611481863552?w=500",
-    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500",
-    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=500",
-    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=500",
-  ];
+export const GallerySection: React.FC<SectionProps> = ({ data, variant = "grid-2col" }) => {
+  const [activeImage, setActiveImage] = useState<string | null>(null);
+
+  if (!data.gallery?.images || data.gallery.images.length === 0) return null;
+
+  const is3Col = variant === "grid-3col";
 
   return (
-    <section className="p-6 space-y-6 py-10 border-b border-[var(--color-secondary)]/20 theme-container">
-      <div className="text-center space-y-2">
-        <h2 className="theme-font-display text-2xl font-bold text-[var(--color-primary)]">Galeri Foto</h2>
-        <p className="text-xs text-[var(--color-text-muted)] leading-relaxed max-w-sm mx-auto">
-          Momen kenangan indah kebahagiaan kami:
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2.5">
-        {images.map((src, idx) => (
-          <div key={idx} className="aspect-square rounded-xl overflow-hidden border border-[var(--color-secondary)]/40 shadow-sm">
-            <img src={src} alt={`Galeri ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-300" />
+    <SectionWrapper id="gallery" subTitle="GALERI" title="Galeri Foto">
+      <div className={`grid ${is3Col ? "grid-cols-3" : "grid-cols-2"} gap-2.5`}>
+        {data.gallery.images.map((img, idx) => (
+          <div 
+            key={idx} 
+            className="aspect-square rounded-xl overflow-hidden border border-[var(--color-secondary)]/40 shadow-sm cursor-pointer hover:scale-105 transition"
+            onClick={() => setActiveImage(img.url)}
+          >
+            <img 
+              src={img.url} 
+              alt={img.caption || `Galeri ${idx + 1}`} 
+              loading="lazy" 
+              className="w-full h-full object-cover" 
+            />
           </div>
         ))}
       </div>
-    </section>
+
+      {/* Lightbox Dialog */}
+      <Dialog open={!!activeImage} onOpenChange={() => setActiveImage(null)}>
+        <DialogContent className="max-w-md p-2 bg-stone-950 border-stone-800">
+          {activeImage && (
+            <img src={activeImage} alt="Preview Lightbox" className="w-full h-auto rounded-lg max-h-[80vh] object-contain mx-auto" />
+          )}
+        </DialogContent>
+      </Dialog>
+    </SectionWrapper>
   );
 };
