@@ -1,0 +1,271 @@
+/* ==========================================================================
+   01 DESIGN SYSTEM — THEME TOKENS CONTRACT
+   ========================================================================== */
+
+/* Base Default Token Rules (Fallback) */
+:root, [data-theme] {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --section-padding-y: var(--space-8);
+  --section-padding-x: var(--space-5);
+
+  --lh-tight: 1.2;
+  --lh-body: 1.6;
+
+  --fs-display-xl: clamp(2.25rem, 8vw, 3rem);
+  --fs-display-lg: clamp(1.75rem, 6vw, 2.25rem);
+  --fs-heading: 1.25rem;
+  --fs-body: 1rem; /* 16px min mobile body accessibility */
+  --fs-caption: 0.75rem;
+
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 800ms;
+
+  --z-cover: 10;
+  --z-nav: 20;
+  --z-modal: 30;
+  --z-toast: 40;
+
+  --min-tap-target: 44px;
+}
+
+/* --------------------------------------------------------------------------
+   T1: Ivory Gold (Klasik / Elegan)
+   -------------------------------------------------------------------------- */
+:root[data-theme="t1"], [data-theme="t1"], [data-theme="t1-ivory-gold"] {
+  --color-bg: #FDFBF7;
+  --color-bg-alt: #F5F0E6;
+  --color-surface: #FFFFFF;
+  --color-primary: #7A5C3E;
+  --color-secondary: #C9A876;
+  --color-text: #2E2A24;
+  --color-text-muted: #7A756C;
+  --color-overlay: rgba(20, 16, 10, 0.55);
+
+  --font-display: "Playfair Display", serif;
+  --font-script: "Great Vibes", cursive;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --border-hairline: 1px solid var(--color-secondary);
+
+  --shadow-card: 0 8px 24px rgba(122, 92, 62, 0.08);
+  --shadow-float: 0 4px 14px rgba(122, 92, 62, 0.14);
+}
+
+/* --------------------------------------------------------------------------
+   T2: Rose Gold (Playful / Floral Pink)
+   -------------------------------------------------------------------------- */
+:root[data-theme="t2"], [data-theme="t2"], [data-theme="t2-rose-gold"] {
+  --color-bg: #FFF8F9;
+  --color-bg-alt: #FDE8EC;
+  --color-surface: #FFFFFF;
+  --color-primary: #9C3D56;
+  --color-secondary: #E295A8;
+  --color-text: #3D2228;
+  --color-text-muted: #825C65;
+  --color-overlay: rgba(35, 10, 18, 0.55);
+
+  --font-display: "Playfair Display", serif;
+  --font-script: "Great Vibes", cursive;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+  --border-hairline: 1px solid var(--color-secondary);
+
+  --shadow-card: 0 8px 24px rgba(156, 61, 86, 0.08);
+  --shadow-float: 0 4px 14px rgba(156, 61, 86, 0.16);
+}
+
+/* --------------------------------------------------------------------------
+   T3: Mawaddah Chic (Minimalis Sage Green)
+   -------------------------------------------------------------------------- */
+:root[data-theme="t3"], [data-theme="t3"], [data-theme="t3-mono-sage"] {
+  --color-bg: #F4F7F4;
+  --color-bg-alt: #E3EBE3;
+  --color-surface: #FFFFFF;
+  --color-primary: #3B5E43;
+  --color-secondary: #8DAA92;
+  --color-text: #1C2B1F;
+  --color-text-muted: #59705E;
+  --color-overlay: rgba(15, 28, 18, 0.55);
+
+  --font-display: "Outfit", sans-serif;
+  --font-script: "Great Vibes", cursive;
+  --font-body: "Inter", sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --border-hairline: 1px solid var(--color-secondary);
+
+  --shadow-card: 0 8px 24px rgba(59, 94, 67, 0.08);
+  --shadow-float: 0 4px 14px rgba(59, 94, 67, 0.14);
+}
+
+/* --------------------------------------------------------------------------
+   T4: Luxury Velvet (Midnight Gold)
+   -------------------------------------------------------------------------- */
+:root[data-theme="t4"], [data-theme="t4"], [data-theme="t4-luxury-velvet"] {
+  --color-bg: #121214;
+  --color-bg-alt: #1C1C21;
+  --color-surface: #24242B;
+  --color-primary: #D4AF37;
+  --color-secondary: #8C7326;
+  --color-text: #F4F4F6;
+  --color-text-muted: #A0A0AB;
+  --color-overlay: rgba(0, 0, 0, 0.75);
+
+  --font-display: "Cinzel", serif;
+  --font-script: "Great Vibes", cursive;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+  --border-hairline: 1px solid var(--color-secondary);
+
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-float: 0 4px 20px rgba(212, 175, 55, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   T6 / T9 / T12 / Monochrome: Minimal Elegance / Monochrome Theme
+   -------------------------------------------------------------------------- */
+:root[data-theme="t6"], [data-theme="t6"],
+:root[data-theme="t9"], [data-theme="t9"],
+:root[data-theme="t12"], [data-theme="t12"],
+:root[data-theme="monochrome"], [data-theme="monochrome"] {
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #F4F4F5;
+  --color-surface: #FFFFFF;
+  --color-primary: #09090B;
+  --color-secondary: #27272A;
+  --color-text: #09090B;
+  --color-text-muted: #71717A;
+  --color-overlay: rgba(0, 0, 0, 0.65);
+
+  --font-display: "Cinzel", serif;
+  --font-script: "Aref Ruqaa", serif;
+  --font-body: "Inter", sans-serif;
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-pill: 0px;
+  --border-hairline: 1px solid #09090B;
+
+  --shadow-card: none;
+  --shadow-float: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   T10 / Sakinah: Nikah Sakinah (Islami / Nude Arabesque)
+   -------------------------------------------------------------------------- */
+:root[data-theme="t10"], [data-theme="t10"],
+:root[data-theme="sakinah"], [data-theme="sakinah"] {
+  --color-bg: #FAF6EE;
+  --color-bg-alt: #EFE7D8;
+  --color-surface: #FFFFFF;
+  --color-primary: #8B5E34;
+  --color-secondary: #D4B28C;
+  --color-text: #2C1E12;
+  --color-text-muted: #7C6856;
+  --color-overlay: rgba(30, 20, 10, 0.55);
+
+  --font-display: "Aref Ruqaa", serif;
+  --font-script: "Aref Ruqaa", serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --border-hairline: 1px solid var(--color-secondary);
+
+  --shadow-card: 0 8px 24px rgba(139, 94, 52, 0.08);
+  --shadow-float: 0 4px 14px rgba(139, 94, 52, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   T13: Salma & Rizal Elegant (Warm Gold & Dark Stone)
+   -------------------------------------------------------------------------- */
+:root[data-theme="t13"], [data-theme="t13"], [data-theme="t13-salma-rizal"] {
+  --color-bg: #1C1816;
+  --color-bg-alt: #2C2724;
+  --color-surface: #24201D;
+  --color-primary: #F59E0B;
+  --color-secondary: #D97706;
+  --color-text: #FEF3C7;
+  --color-text-muted: #D97706;
+  --color-overlay: rgba(15, 12, 10, 0.7);
+
+  --font-display: "Cormorant Infant", "Playfair Display", serif;
+  --font-script: "Aref Ruqaa", serif;
+  --font-body: "Plus Jakarta Sans", sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --border-hairline: 1px solid rgba(245, 158, 11, 0.3);
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-float: 0 4px 20px rgba(245, 158, 11, 0.2);
+}
+
+/* Theme Utilities for Sections & Components */
+.theme-container {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  min-height: 100%;
+}
+
+.theme-font-display {
+  font-family: var(--font-display);
+}
+
+.theme-font-script {
+  font-family: var(--font-script);
+}
+
+.theme-btn-primary {
+  min-height: var(--min-tap-target);
+  min-width: var(--min-tap-target);
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  transition: all var(--duration-fast) var(--ease-standard);
+}
+
+.theme-btn-primary:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.theme-card {
+  background-color: var(--color-surface);
+  border: var(--border-hairline);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-5);
+}

@@ -518,7 +518,7 @@ export default function FullScreenInvitation({
     <div className={`min-h-screen w-full ${isMonochrome ? "bg-zinc-100 text-zinc-900" : "bg-gradient-to-br from-cream via-ivory to-gold-soft/20"} flex justify-center items-center py-0 md:py-4 px-0`}>
       
       {/* Container utama: Terpusat di PC (max-w-md), alami 100% di HP */}
-      <div className={`w-full max-w-md ${isMonochrome ? "bg-white border-2 border-zinc-950 text-zinc-900" : "bg-background border border-border/40 md:rounded-[2rem]"} min-h-screen md:min-h-[800px] md:h-[840px] overflow-hidden shadow-2xl relative flex flex-col justify-between`}>
+      <div data-theme={selectedTemplate || "t1"} className={`w-full max-w-md ${isMonochrome ? "bg-white border-2 border-zinc-950 text-zinc-900" : "bg-background border border-border/40 md:rounded-[2rem]"} min-h-screen md:min-h-[800px] md:h-[840px] overflow-hidden shadow-2xl relative flex flex-col justify-between theme-container`}>
         
         {(selectedTemplate === "t12" || selectedTemplate === "t13") && (
           <style dangerouslySetInnerHTML={{ __html: `
