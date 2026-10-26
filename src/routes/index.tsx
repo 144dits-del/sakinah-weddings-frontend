@@ -1,11 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
 import { FloralCorner, FloralDivider, FloralSprig } from "@/components/site/Florals";
 import { packages, formatRupiah } from "@/lib/dummy-data";
 import { useState, useEffect } from "react";
-import FullScreenInvitation from "@/components/site/FullScreenInvitation";
 import {
   ArrowRight, Heart, Globe, Image as ImageIcon, Music, Gift, MessageCircle,
   Sparkle, Users, Check, Star, Calendar, Lock, ShieldCheck, Zap, HeartHandshake,
@@ -69,50 +68,23 @@ const faqs = [
 ];
 
 function Landing() {
-  const [isSubdomainMode, setIsSubdomainMode] = useState(false);
-  const [subdomain, setSubdomain] = useState("");
+  const navigate = useNavigate();
   const [demoTheme, setDemoTheme] = useState("sakinah");
+  const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hostname = window.location.hostname;
-      const searchParams = new URLSearchParams(window.location.search);
-      const querySub = searchParams.get("subdomain");
-
-      if (querySub) {
-        setIsSubdomainMode(true);
-        setSubdomain(querySub);
-      } else {
-        const host = hostname.toLowerCase();
-        let sub = "";
-
-        if (host.includes(".sakinahweb.lovable.app") && host !== "sakinahweb.lovable.app") {
-          sub = host.split(".sakinahweb.lovable.app")[0];
-        } else if (host.includes(".sakinahweb.id") && host !== "sakinahweb.id") {
-          sub = host.split(".sakinahweb.id")[0];
-        } else if (host.includes(".sakinah.studio") && host !== "sakinah.studio") {
-          sub = host.split(".sakinah.studio")[0];
-        } else if (
-          !host.startsWith("www.") &&
-          host !== "sakinahweb.id" &&
-          host !== "sakinahweb.lovable.app" &&
-          host !== "sakinah.studio" &&
-          host.split(".").length > 2
-        ) {
-          sub = host.split(".")[0];
-        }
-
-        if (sub && sub !== "www") {
-          setIsSubdomainMode(true);
-          setSubdomain(sub);
-        }
-      }
+    // Invitations have their own guest route; never infer one from 127.0.0.1.
+    const isLocal = ["localhost", "127.0.0.1", "[::1]"].includes(window.location.hostname);
+    if (localStorage.getItem("sakinah_user_email")) {
+      void navigate({ to: "/dashboard", search: { tab: "Dashboard" }, replace: true });
+    } else if (isLocal) {
+      void navigate({ to: "/login", replace: true });
+    } else {
+      setCheckingSession(false);
     }
-  }, []);
+  }, [navigate]);
 
-  if (isSubdomainMode) {
-    return <FullScreenInvitation subdomain={subdomain} />;
-  }
+  if (checkingSession) return <main className="min-h-screen bg-ivory" aria-label="Memuat halaman awal" />;
 
   return (
     <div className="min-h-screen bg-ivory text-foreground">

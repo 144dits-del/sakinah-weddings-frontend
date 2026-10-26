@@ -16,7 +16,7 @@ import {
   setStoredPackage,
   formatRupiah,
   WeddingData,
-  dummyWedding,
+  emptyWedding,
 } from "@/lib/dummy-data";
 import {
   Lock,
@@ -92,6 +92,7 @@ const defaultDashboardTemplates = [
   { id: "t10", name: "Nikah Sakinah", type: "Premium", bg: "from-amber-100 via-stone-50 to-amber-50", icon: "🦢", popular: true },
   { id: "t12", name: "Monochrome Scroll", type: "Premium", bg: "from-zinc-900 to-black border-2 border-zinc-950", icon: "🖤", popular: true },
   { id: "t13", name: "Salma & Rizal Elegant", type: "Premium", bg: "from-amber-900 via-amber-950 to-stone-900", icon: "👑", popular: true },
+  { id: "t14", name: "Naskah Janji", type: "Premium", bg: "from-stone-100 to-amber-50", icon: "✦", popular: true },
 ];
 
 function Dashboard() {
@@ -102,7 +103,7 @@ function Dashboard() {
   // Muat daftar template dari localStorage jika ada, dipetakan ke format dashboard
   const [templatesList, setTemplatesList] = useState<any[]>(defaultDashboardTemplates);
 
-  const [weddingData, setWeddingData] = useState<WeddingData>(dummyWedding);
+  const [weddingData, setWeddingData] = useState<WeddingData>(emptyWedding);
   const [selectedTemplate, setSelectedTemplate] = useState("sakinah");
   const [selectedMusic, setSelectedMusic] = useState("Beautiful - Instrumental");
   const [customLanguage, setCustomLanguage] = useState<Record<string, string>>({});
@@ -551,7 +552,7 @@ function Dashboard() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Link to="/preview" target="_blank">
+            <Link to="/preview" search={{ theme: selectedTemplate }} target="_blank">
               <Button variant="outline" size="sm" className="rounded-full flex items-center gap-1.5 text-xs">
                 <Share2 className="h-3.5 w-3.5" /> Lihat Website
               </Button>

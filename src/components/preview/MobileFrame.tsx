@@ -4,6 +4,7 @@ import { WeddingData, dummyWedding } from "@/lib/dummy-data";
 import { weddingToInvitation } from "@/lib/dummy-invitation";
 import { resolveTheme } from "@/lib/theme-resolver";
 import { SECTION_REGISTRY } from "@/components/sections/SectionRegistry";
+import { SheilaEditorial } from "./SheilaEditorial";
 
 interface MobileFrameProps {
   themeId?: string;
@@ -31,9 +32,8 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({
 
   useEffect(() => {
     // Preload audio metadata only
-    audioRef.current = new Audio("/assets/audio/wedding-bgm.mp3");
-    audioRef.current.preload = "metadata";
-    audioRef.current.loop = true;
+    // No bundled recording yet; do not request a missing asset or claim music is playing.
+    audioRef.current = null;
 
     return () => {
       if (audioRef.current) {
@@ -89,7 +89,7 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({
         className="w-full max-w-[430px] min-h-[100dvh] md:min-h-[820px] md:h-[840px] bg-[var(--color-bg,#FFFFFF)] text-[var(--color-text,#09090B)] md:rounded-[2.5rem] md:border-4 md:border-stone-800 overflow-hidden shadow-2xl relative flex flex-col justify-between pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
       >
         {/* Floating Sound Toggle */}
-        {isOpen && (
+        {isOpen && audioRef.current && (
           <button
             type="button"
             className="fixed md:absolute top-5 right-5 z-40 w-11 h-11 rounded-full bg-[var(--color-surface,#FFFFFF)] text-[var(--color-primary,#7A5C3E)] shadow-lg border border-[var(--color-secondary)]/30 flex items-center justify-center cursor-pointer active:scale-95 transition"
@@ -115,12 +115,16 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({
         {/* Unopened Gate: Cover Section */}
         {!isOpen ? (
           <div className="w-full h-full overflow-hidden">
-            <CoverComponent
-              data={invitation}
-              guestName={guestName}
-              guestAddress={guestAddress}
-              onOpenInvitation={handleOpenGate}
-            />
+            {themeConfig.id === "t14" ? (
+              <SheilaEditorial data={invitation} page="cover" guestName={guestName} guestAddress={guestAddress} onOpenInvitation={handleOpenGate} />
+            ) : (
+              <CoverComponent
+                data={invitation}
+                guestName={guestName}
+                guestAddress={guestAddress}
+                onOpenInvitation={handleOpenGate}
+              />
+            )}
           </div>
         ) : (
           /* Opened Main Content: Scrollable with proximity snap */
@@ -129,7 +133,9 @@ export const MobileFrame: React.FC<MobileFrameProps> = ({
             onScroll={handleScroll}
             className="flex-1 overflow-y-auto scrollbar-none w-full animate-fade-in scroll-snap-y-proximity"
           >
-            {themeConfig.sections
+            {themeConfig.id === "t14" ? (
+              <SheilaEditorial data={invitation} page="contents" guestName={guestName} guestAddress={guestAddress} />
+            ) : themeConfig.sections
               .filter((s) => s.type !== "cover")
               .map((s, idx) => {
                 const Component = SECTION_REGISTRY[s.type];

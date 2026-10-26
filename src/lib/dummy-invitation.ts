@@ -97,28 +97,26 @@ export const defaultDummyInvitation: InvitationData = {
   },
 };
 
-// Adapter: WeddingData (wizard/dummy) -> InvitationData (section contract)
+// Adapter: real owner data never inherits another couple's photos, story, or bank accounts.
 export const weddingToInvitation = (
   w: import("./dummy-data").WeddingData,
   themeId = "t1",
 ): InvitationData => ({
-  ...defaultDummyInvitation,
-  meta: { ...defaultDummyInvitation.meta, slug: w.subdomain, theme: themeId },
+  meta: { slug: w.subdomain, theme: themeId, language: "id" },
   couple: {
-    ...defaultDummyInvitation.couple,
     groom: {
-      ...defaultDummyInvitation.couple.groom,
-      fullName: w.groom.fullName || defaultDummyInvitation.couple.groom.fullName,
-      nickname: w.groom.nickname || defaultDummyInvitation.couple.groom.nickname,
-      parentInfo: `Putra dari Bpk. ${w.groom.father} & Ibu ${w.groom.mother}`,
+      fullName: w.groom.fullName,
+      nickname: w.groom.nickname,
+      parentInfo: `Putra dari ${[w.groom.father, w.groom.mother].filter(Boolean).join(" & ")}`,
     },
     bride: {
-      ...defaultDummyInvitation.couple.bride,
-      fullName: w.bride.fullName || defaultDummyInvitation.couple.bride.fullName,
-      nickname: w.bride.nickname || defaultDummyInvitation.couple.bride.nickname,
-      parentInfo: `Putri dari Bpk. ${w.bride.father} & Ibu ${w.bride.mother}`,
+      fullName: w.bride.fullName,
+      nickname: w.bride.nickname,
+      parentInfo: `Putri dari ${[w.bride.father, w.bride.mother].filter(Boolean).join(" & ")}`,
     },
   },
+  cover: { coverImageUrl: "", greetingText: "The Wedding Of" },
+  openingQuote: defaultDummyInvitation.openingQuote,
   events: [
     {
       label: "Akad Nikah",
@@ -138,5 +136,11 @@ export const weddingToInvitation = (
       venueAddress: w.resepsi.venue,
       mapUrl: w.resepsi.maps,
     },
-  ],
+  ].filter((event) => event.date || event.venueName),
+  loveStory: [],
+  gallery: { images: [] },
+  rsvp: { enabled: true },
+  gift: { enabled: false, banks: [] },
+  guest: { name: "Tamu Undangan" },
+  music: { url: "/assets/audio/wedding-bgm.mp3", autoplayOnOpen: true },
 });

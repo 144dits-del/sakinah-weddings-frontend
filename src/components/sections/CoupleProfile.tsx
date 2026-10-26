@@ -18,9 +18,11 @@ export const CoupleProfile: React.FC<SectionProps> = ({ data, variant = "portrai
 
       {isSingleCouple ? (
         <div className="theme-card text-center space-y-4">
-          <div className="w-full h-48 rounded-xl overflow-hidden border border-[var(--color-secondary)]">
-            <img src={data.cover.coverImageUrl || data.couple.bride.photoUrl} alt="Foto Pasangan" className="w-full h-full object-cover" />
-          </div>
+          {(data.cover.coverImageUrl || data.couple.bride.photoUrl) && (
+            <div className="w-full h-48 rounded-xl overflow-hidden border border-[var(--color-secondary)]">
+              <img src={data.cover.coverImageUrl || data.couple.bride.photoUrl} alt="Foto Pasangan" className="w-full h-full object-cover" />
+            </div>
+          )}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <h3 className="theme-font-display text-lg font-bold text-[var(--color-text)]">{data.couple.bride.fullName}</h3>
@@ -36,9 +38,11 @@ export const CoupleProfile: React.FC<SectionProps> = ({ data, variant = "portrai
         <div className={`grid ${isSideBySide ? "grid-cols-1 sm:grid-cols-2" : "grid-cols-1"} gap-4`}>
           {/* Profile Wanita */}
           <div className="theme-card text-center space-y-2">
-            <div className="w-20 h-20 rounded-full mx-auto overflow-hidden border-2 border-[var(--color-secondary)] shadow-md">
-              <img src={data.couple.bride.photoUrl || "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/wanita-1-210627044705-l.jpg"} alt={data.couple.bride.fullName} className="w-full h-full object-cover" />
-            </div>
+            {data.couple.bride.photoUrl && (
+              <div className="w-20 h-20 rounded-full mx-auto overflow-hidden border-2 border-[var(--color-secondary)] shadow-md">
+                <img src={data.couple.bride.photoUrl} alt={data.couple.bride.fullName} className="w-full h-full object-cover" />
+              </div>
+            )}
             <h3 className="theme-font-display text-lg font-bold text-[var(--color-text)]">{data.couple.bride.fullName}</h3>
             <p className="text-[10px] text-[var(--color-text-muted)]">{data.couple.bride.parentInfo}</p>
             {data.couple.bride.instagram && (
@@ -52,9 +56,11 @@ export const CoupleProfile: React.FC<SectionProps> = ({ data, variant = "portrai
 
           {/* Profile Pria */}
           <div className="theme-card text-center space-y-2">
-            <div className="w-20 h-20 rounded-full mx-auto overflow-hidden border-2 border-[var(--color-secondary)] shadow-md">
-              <img src={data.couple.groom.photoUrl || "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/pria-1-240421071848-l.jpg"} alt={data.couple.groom.fullName} className="w-full h-full object-cover" />
-            </div>
+            {data.couple.groom.photoUrl && (
+              <div className="w-20 h-20 rounded-full mx-auto overflow-hidden border-2 border-[var(--color-secondary)] shadow-md">
+                <img src={data.couple.groom.photoUrl} alt={data.couple.groom.fullName} className="w-full h-full object-cover" />
+              </div>
+            )}
             <h3 className="theme-font-display text-lg font-bold text-[var(--color-text)]">{data.couple.groom.fullName}</h3>
             <p className="text-[10px] text-[var(--color-text-muted)]">{data.couple.groom.parentInfo}</p>
             {data.couple.groom.instagram && (

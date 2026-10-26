@@ -10,6 +10,15 @@ export interface CatalogThemeItem {
 
 export const THEME_CATALOG: CatalogThemeItem[] = [
   {
+    id: "t14",
+    name: "Naskah Janji",
+    category: "Islami / Kalem",
+    packageLevel: "Warahmah",
+    thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23eee8db'/%3E%3Cpath d='M20 20h360v460H20z' fill='none' stroke='%23938872'/%3E%3Ctext x='200' y='240' text-anchor='middle' font-family='Georgia' font-size='24' fill='%23505d51'%3ENASKAH JANJI%3C/text%3E%3C/svg%3E",
+    tag: "Baru",
+    status: "Aktif",
+  },
+  {
     id: "t13",
     name: "Salma & Rizal Elegant",
     category: "Klasik / Elegan",

@@ -20,7 +20,7 @@ export const Cover: React.FC<SectionProps> = ({
       <div 
         className="absolute inset-0 bg-cover bg-center -z-10"
         style={{ 
-          backgroundImage: !isMinimal ? `url(${data.cover.coverImageUrl || "https://the.invisimple.id/wp-content/uploads/jet-form-builder/d0a24f3e4478f0f3c7a3982a784bcc25/2026/04/1000507989.jpg"})` : undefined,
+          backgroundImage: !isMinimal && data.cover.coverImageUrl ? `url(${data.cover.coverImageUrl})` : undefined,
         }}
       >
         <div className="absolute inset-0 bg-[var(--color-overlay,rgba(20,16,10,0.6))] backdrop-blur-[1px]" />
@@ -33,13 +33,9 @@ export const Cover: React.FC<SectionProps> = ({
 
       {/* Frame Container */}
       <div className={`relative z-10 w-full max-w-sm p-6 rounded-2xl ${isSplit ? "bg-[var(--color-surface)] border border-[var(--color-secondary)] shadow-2xl text-[var(--color-text)]" : "text-white"}`}>
-        {!isMinimal && (
+        {!isMinimal && data.couple.groom.photoUrl && (
           <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-[var(--color-secondary,#C9A876)] mb-4 shadow-lg mx-auto">
-            <img 
-              src={data.couple.groom.photoUrl || "https://adirara.webnikah.com/dirmember/00000001/adisumaryadi/slide-1-2372-l-202102060607.jpg"} 
-              alt="Foto Pasangan" 
-              className="w-full h-full object-cover"
-            />
+            <img src={data.couple.groom.photoUrl} alt="Foto Pasangan" className="w-full h-full object-cover" />
           </div>
         )}
 

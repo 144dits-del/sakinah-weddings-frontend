@@ -12,6 +12,18 @@ export interface ThemeConfig {
 }
 
 export const THEME_CONFIGS: Record<string, ThemeConfig> = {
+  "t14": {
+    id: "t14",
+    name: "Naskah Janji",
+    category: "islami-kalem",
+    sections: [
+      { type: "cover", variant: "editorial-manuscript" },
+      { type: "opening-quote", variant: "editorial-manuscript" },
+      { type: "couple-profile", variant: "editorial-manuscript" },
+      { type: "event-detail", variant: "editorial-manuscript" },
+      { type: "footer", variant: "editorial-manuscript" },
+    ],
+  },
   "t1": {
     id: "t1",
     name: "Ivory Gold",

@@ -9,8 +9,6 @@ import { SectionWrapper } from "@/components/primitives/SectionWrapper";
 import { SectionProps } from "./SectionProps";
 
 export const RSVPForm: React.FC<SectionProps> = ({ data, guestName }) => {
-  if (data.rsvp?.enabled === false) return null;
-
   const [name, setName] = useState(guestName || data.guest?.name || "");
   const [attendance, setAttendance] = useState("Hadir");
   const [pax, setPax] = useState("1");
@@ -31,6 +29,8 @@ export const RSVPForm: React.FC<SectionProps> = ({ data, guestName }) => {
     setText("");
     toast.success("Terima kasih atas ucapan & konfirmasi Anda!");
   };
+
+  if (data.rsvp?.enabled === false) return null;
 
   return (
     <SectionWrapper id="rsvp" subTitle="RSVP" title="Konfirmasi Kehadiran & Doa Restu">

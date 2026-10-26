@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import FullScreenInvitation from "@/components/site/FullScreenInvitation";
+import { useEffect, useState } from "react";
+import { MobileFrame } from "@/components/preview/MobileFrame";
+import { getWeddingBySubdomain, type WeddingData } from "@/lib/dummy-data";
 
 export const Route = createFileRoute("/kepada/$guest")({
   validateSearch: (search) => z.object({
@@ -12,6 +14,8 @@ export const Route = createFileRoute("/kepada/$guest")({
 function KepadaGuest() {
   const { guest } = Route.useParams();
   const { subdomain: querySubdomain } = Route.useSearch();
+  const [wedding, setWedding] = useState<WeddingData | null>(null);
+  const [loaded, setLoaded] = useState(false);
   let guestName = "Tamu Kehormatan";
   let guestAddress = "";
 
@@ -29,41 +33,26 @@ function KepadaGuest() {
     }
   }
 
-  // Detect subdomain dynamically from hostname or query parameters
-  let detectedSubdomain = "di-ra"; // Fallback to "di-ra"
-  if (querySubdomain) {
-    detectedSubdomain = querySubdomain;
-  } else if (typeof window !== "undefined") {
-    const hostname = window.location.hostname;
-    const host = hostname.toLowerCase();
-    let sub = "";
+  useEffect(() => {
+    const host = window.location.hostname.toLowerCase();
+    const domains = ["sakinahweb.id", "sakinahweb.lovable.app", "sakinah.studio"];
+    const hosted = domains.find((domain) => host.endsWith(`.${domain}`));
+    const fromHost = hosted ? host.slice(0, -(hosted.length + 1)) : "";
+    const subdomain = querySubdomain || fromHost;
+    setWedding(getWeddingBySubdomain(subdomain));
+    setLoaded(true);
+  }, [querySubdomain]);
 
-    if (host.includes(".sakinahweb.lovable.app") && host !== "sakinahweb.lovable.app") {
-      sub = host.split(".sakinahweb.lovable.app")[0];
-    } else if (host.includes(".sakinahweb.id") && host !== "sakinahweb.id") {
-      sub = host.split(".sakinahweb.id")[0];
-    } else if (host.includes(".sakinah.studio") && host !== "sakinah.studio") {
-      sub = host.split(".sakinah.studio")[0];
-    } else if (
-      !host.startsWith("www.") &&
-      host !== "sakinahweb.id" &&
-      host !== "sakinahweb.lovable.app" &&
-      host !== "sakinah.studio" &&
-      host.split(".").length > 2
-    ) {
-      sub = host.split(".")[0];
-    }
-
-    if (sub && sub !== "www") {
-      detectedSubdomain = sub;
-    }
+  if (!loaded) return <main className="p-8 text-center">Memuat undangan…</main>;
+  if (!wedding) {
+    return <main className="min-h-screen flex items-center justify-center p-8 text-center">
+      <div><h1 className="text-2xl font-serif">Undangan tidak ditemukan</h1>
+        <p className="mt-3 text-sm">Periksa tautan undangan. Pratinjau lokal hanya tersedia di browser tempat undangan disimpan.</p>
+      </div>
+    </main>;
   }
 
-  return (
-    <FullScreenInvitation
-      subdomain={detectedSubdomain}
-      guestName={guestName}
-      guestAddress={guestAddress}
-    />
-  );
+  const selectedTheme = localStorage.getItem(`sakinah_selected_template_${wedding.subdomain}`)
+    || localStorage.getItem("sakinah_selected_template") || "t1";
+  return <MobileFrame themeId={selectedTheme} weddingData={wedding} guestName={guestName} guestAddress={guestAddress} />;
 }

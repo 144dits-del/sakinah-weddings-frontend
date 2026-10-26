@@ -90,33 +90,56 @@ export const dummyWedding: WeddingData = {
   resepsi: { date: "2026-05-31", start: "14:30", end: "14:30", venue: "21e21dsad", maps: "" },
 };
 
+// Empty draft for a new owner. Demo content must only appear in explicit demos.
+export const emptyWedding: WeddingData = {
+  subdomain: "",
+  groom: { fullName: "", nickname: "", father: "", mother: "" },
+  bride: { fullName: "", nickname: "", father: "", mother: "" },
+  religion: "Islam",
+  timezone: "WIB",
+  akad: { date: "", start: "", end: "", venue: "", maps: "" },
+  resepsi: { date: "", start: "", end: "", venue: "", maps: "" },
+};
+
 export const STORAGE_KEY = "sakinah_wedding_data";
 export const PACKAGE_STORAGE_KEY = "sakinah_active_package";
 
-export const getStoredWeddingData = (): WeddingData => {
-  if (typeof window === "undefined") return dummyWedding;
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (saved) {
-    try {
-      const parsed = JSON.parse(saved);
-      return {
-        ...dummyWedding,
-        ...parsed,
-        groom: { ...dummyWedding.groom, ...parsed.groom },
-        bride: { ...dummyWedding.bride, ...parsed.bride },
-        akad: { ...dummyWedding.akad, ...parsed.akad },
-        resepsi: { ...dummyWedding.resepsi, ...parsed.resepsi },
-      };
-    } catch (e) {
-      console.error(e);
-    }
+const parseWedding = (saved: string | null): WeddingData | null => {
+  if (!saved) return null;
+  try {
+    const parsed = JSON.parse(saved);
+    if (!parsed || typeof parsed !== "object") return null;
+    return {
+      ...emptyWedding,
+      ...parsed,
+      groom: { ...emptyWedding.groom, ...parsed.groom },
+      bride: { ...emptyWedding.bride, ...parsed.bride },
+      akad: { ...emptyWedding.akad, ...parsed.akad },
+      resepsi: { ...emptyWedding.resepsi, ...parsed.resepsi },
+    };
+  } catch {
+    return null;
   }
-  return dummyWedding;
+};
+
+export const getStoredWeddingData = (): WeddingData => {
+  if (typeof window === "undefined") return emptyWedding;
+  return parseWedding(localStorage.getItem(STORAGE_KEY)) || emptyWedding;
+};
+
+// Local preview only: public multi-device invitations need server persistence.
+export const getWeddingBySubdomain = (subdomain: string): WeddingData | null => {
+  if (typeof window === "undefined" || !subdomain) return null;
+  const scoped = parseWedding(localStorage.getItem(`${STORAGE_KEY}_${subdomain}`));
+  if (scoped?.subdomain === subdomain) return scoped;
+  const current = parseWedding(localStorage.getItem(STORAGE_KEY));
+  return current?.subdomain === subdomain ? current : null;
 };
 
 export const setStoredWeddingData = (data: WeddingData) => {
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    if (data.subdomain) localStorage.setItem(`${STORAGE_KEY}_${data.subdomain}`, JSON.stringify(data));
   }
 };
 
